@@ -1,13 +1,25 @@
-// import { redirect } from 'next/navigation';
+// import HeroSection from "@/components/sections/HeroSection";
+// import FAQSection from "@/components/sections/FAQSection";
+// import Features from "@/components/sections/Features";
 
-// export default function HomePage() {
-//   redirect('/dashboard');
-// }
+import LoginPage from "./login/page";
 
-import React from "react";
+// import Contact from "@/components/sections/Contact";
 
-const page = () => {
-  return <div></div>;
-};
-
-export default page;
+// import Kind from "@/components/sections/Kind";
+// import Productive from "@/components/sections/Productive";
+// import Small from "@/components/sections/Small";
+export default function HomePage() {
+  return (
+    <main className="relative">
+      <LoginPage />
+      {/* <HeroSection />
+      <Features />
+      <Small />
+      <Productive />
+      <Kind />
+      <FAQSection />
+      <Contact /> */}
+    </main>
+  );
+}
