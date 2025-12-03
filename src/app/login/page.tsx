@@ -1,12 +1,23 @@
+'use client'; // Client for router
 import Image from "next/image";
+import { useRouter } from "next/navigation"; // For redirect
 
 export default function LoginPage() {
+  const router = useRouter();
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Simulate login (replace with real auth, e.g., API call)
+    console.log('Logging in...');
+    router.push('/dashboard'); // Redirect to dashboard on success
+  };
+
   return (
     <div className="flex h-screen bg-white">
       {/* Left side with background image */}
       <div className="hidden lg:flex lg:w-1/2 bg-[#1F2858] items-center justify-center p-12">
         <div className="relative w-full max-w-md">
-          <div className=" p-8 ">
+          <div className="p-8">
             <div className="relative w-full h-64">
               <Image
                 src="/images/guide.png"
@@ -35,11 +46,11 @@ export default function LoginPage() {
               />
             </div>
             <p className="mt-2 text-sm text-gray-600">
-              Efficient,Organized,Reliable
+              Efficient, Organized, Reliable
             </p>
           </div>
 
-          <form className="mt-8 space-y-6" action="#" method="POST">
+          <form className="mt-8 space-y-6" onSubmit={handleLogin}>
             <div className="rounded-md shadow-sm space-y-4">
               <div>
                 <label
@@ -106,7 +117,7 @@ export default function LoginPage() {
             <div>
               <button
                 type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#1F2858] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#1F2858] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 hover:bg-[#162248]"
               >
                 Log in
               </button>

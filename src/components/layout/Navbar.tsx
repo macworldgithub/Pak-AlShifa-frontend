@@ -1,6 +1,6 @@
 // Updated: components/layout/Navbar.tsx (Assuming this is your Header; added hamburger toggle)
 "use client";
-import { useState } from 'react';
+import { useState } from "react";
 import Image from "next/image";
 
 interface NavbarProps {
@@ -8,20 +8,20 @@ interface NavbarProps {
 }
 
 export default function Navbar({ onToggleSidebar }: NavbarProps) {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200 px-6 py-4 flex items-center justify-between">
       {/* Left: Logo + Title + Mobile Hamburger */}
       <div className="flex items-center space-x-4">
         {/* Mobile Hamburger Button */}
-        <button 
+        <button
           onClick={onToggleSidebar}
           className="md:hidden p-2 text-gray-600 hover:text-gray-900 rounded-md hover:bg-gray-100 transition-colors"
         >
           <span className="text-xl">☰</span> {/* Hamburger icon */}
         </button>
-        
+
         <Image
           src="/images/logo.png" // Small logo
           alt="Pak-Al-Shifa"
@@ -44,9 +44,7 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
           />
-          <span className="absolute left-3 top-2.5 text-gray-400">
-            🔍
-          </span>
+          <span className="absolute left-3 top-2.5 text-gray-400">🔍</span>
         </div>
       </div>
 
@@ -63,11 +61,15 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
             height={40}
             className="rounded-full"
           />
-          <span className="hidden md:block text-sm font-medium text-gray-700">Danny Bates</span>
+          <span className="hidden md:block text-sm font-medium text-gray-700">
+            Danny Bates
+          </span>
           <div className="hidden group-hover:block absolute right-4 top-full bg-white shadow-lg rounded-lg p-2 z-10">
             <p className="text-sm">Danny Bates</p>
             <p className="text-xs text-gray-500">Admin</p>
-            <button className="block w-full text-left px-2 py-1 text-red-600 hover:bg-red-50 rounded">Logout</button>
+            <button className="block w-full text-left px-2 py-1 text-red-600 hover:bg-red-50 rounded">
+              Logout
+            </button>
           </div>
         </div>
       </div>
