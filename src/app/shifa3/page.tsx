@@ -1,30 +1,62 @@
-import React from "react";
+"use client";
 
+import { useState } from "react";
 
-export default function PatientDetails() {
+export default function Shifa3() {
+  const [activeTab, setActiveTab] = useState("Nursing Assessments");
+  const [activeSubTab, setActiveSubTab] = useState("Patients Details");
+  const [formData, setFormData] = useState({
+    visitDate: "",
+    fileNo: "",
+    patientName: "",
+    dob: "",
+    age: "",
+    sex: "Male",
+    emiratesId: "",
+    mobileNo: "",
+    email: "",
+    nationality: "",
+    corporateName: "",
+    company: "",
+    remark: "",
+  });
+
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md">
-        {/* Tabs */}
-        <div className="flex space-x-2 mb-6 overflow-x-auto pb-2">
+    <div className="min-h-screen bg-gray-100 p-4">
+      <div className="max-w-6xl mx-auto bg-white p-4 rounded-md shadow-sm mt-4">
+        {/* Navigation Tabs */}
+        <div className="flex space-x-1 mb-2 overflow-x-auto pb-1">
           {["Nursing Assessments", "Doctor Assessments", "Invoiced"].map(
-            (t, i) => (
+            (tab) => (
               <button
-                key={i}
-                className={`px-4 py-2 text-sm rounded-md shadow-sm whitespace-nowrap ${
-                  i === 0
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-4 py-1 text-xs rounded-sm whitespace-nowrap ${
+                  activeTab === tab
                     ? "bg-blue-600 text-white"
-                    : "bg-gray-200 text-gray-700"
+                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                 }`}
               >
-                {t}
+                {tab}
               </button>
             )
           )}
         </div>
 
-        {/* Sub Tabs */}
-        <div className="flex flex-wrap gap-2 mb-6">
+        {/* Sub Navigation */}
+        <div className="flex flex-wrap gap-1 mb-4">
           {[
             "Patients Details",
             "Nursing",
@@ -38,112 +70,339 @@ export default function PatientDetails() {
             "Patient Files",
             "Discharge",
             "ECG",
-           
-          ].map((t, i) => (
+          ].map((tab) => (
             <button
-              key={i}
-              className={`px-4 py-1 text-sm rounded-md whitespace-nowrap ${
-                t === "Patients Details"
+              key={tab}
+              onClick={() => setActiveSubTab(tab)}
+              className={`px-2 py-0.5 text-xs rounded-sm whitespace-nowrap ${
+                activeSubTab === tab
                   ? "bg-blue-600 text-white"
-                  : "bg-gray-200 text-gray-700"
+                  : "bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200"
               }`}
             >
-              {t}
+              {tab}
             </button>
           ))}
         </div>
 
-        {/* Patient Details */}
-        <h2 className="text-xl font-semibold mb-4">Patient Details</h2>
+        {/* Main Content */}
+        {activeSubTab === "Patients Details" ? (
+          <div className="border border-gray-300 p-4 rounded-sm">
+            <h2 className="text-base font-semibold mb-3 text-gray-700 border-b pb-2">
+              Patient Details
+            </h2>
 
-        <form className="space-y-4">
-          {/* Row 1 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium">Visit Date</label>
-              <input type="date" className="input" />
-            </div>
-          </div>
+            <form className="space-y-3">
+              {/* Visit Date */}
+              <div className="flex items-center mb-2">
+                <label className="w-24 text-xs text-gray-600">Visit Date</label>
+                <input
+                  type="date"
+                  name="visitDate"
+                  value={formData.visitDate}
+                  onChange={handleInputChange}
+                  className="border border-gray-300 text-xs px-2 py-1 w-40"
+                />
+              </div>
 
-          {/* Row 2 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium">File No.</label>
-              <input type="text" className="input" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Patient Name</label>
-              <input type="text" className="input" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">DOB</label>
-              <input type="date" className="input" />
-            </div>
-          </div>
+              {/* File No and Patient Name */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+                <div className="flex items-center">
+                  <label className="w-24 text-xs text-gray-600">File No.</label>
+                  <input
+                    type="text"
+                    name="fileNo"
+                    value={formData.fileNo}
+                    onChange={handleInputChange}
+                    className="border border-gray-300 text-xs px-2 py-1 flex-1"
+                  />
+                </div>
+                <div className="flex items-center">
+                  <label className="w-24 text-xs text-gray-600">
+                    Patient Name
+                  </label>
+                  <input
+                    type="text"
+                    name="patientName"
+                    value={formData.patientName}
+                    onChange={handleInputChange}
+                    className="border border-gray-300 text-xs px-2 py-1 flex-1"
+                  />
+                </div>
+              </div>
 
-          {/* Row 3 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium">Age</label>
-              <input type="number" className="input" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Sex</label>
-              <input type="text" className="input" />
-            </div>
-          </div>
+              {/* DOB and Age */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+                <div className="flex items-center">
+                  <label className="w-24 text-xs text-gray-600">DOB.</label>
+                  <input
+                    type="date"
+                    name="dob"
+                    value={formData.dob}
+                    onChange={handleInputChange}
+                    className="border border-gray-300 text-xs px-2 py-1 w-40"
+                  />
+                </div>
+                <div className="flex items-center">
+                  <label className="w-24 text-xs text-gray-600">Age.</label>
+                  <input
+                    type="text"
+                    name="age"
+                    value={formData.age}
+                    onChange={handleInputChange}
+                    className="border border-gray-300 text-xs px-2 py-1 w-20"
+                  />
+                </div>
+              </div>
 
-          {/* Row 4 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium">Emirates ID</label>
-              <input type="text" className="input" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Mobile No.</label>
-              <input type="text" className="input" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Email Address</label>
-              <input type="email" className="input" />
-            </div>
-          </div>
+              {/* Sex and Emirates ID */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+                <div className="flex items-center">
+                  <label className="w-24 text-xs text-gray-600">Sex</label>
+                  <select
+                    name="sex"
+                    value={formData.sex}
+                    onChange={handleInputChange}
+                    className="border border-gray-300 text-xs px-2 py-1 w-40"
+                  >
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div className="flex items-center">
+                  <label className="w-24 text-xs text-gray-600">
+                    Emirates ID
+                  </label>
+                  <input
+                    type="text"
+                    name="emiratesId"
+                    value={formData.emiratesId}
+                    onChange={handleInputChange}
+                    className="border border-gray-300 text-xs px-2 py-1 flex-1"
+                  />
+                </div>
+              </div>
 
-          {/* Row 5 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium">Nationality</label>
-              <input type="text" className="input" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">
-                Corporate Name
-              </label>
-              <input type="text" className="input" />
-            </div>
-          </div>
+              {/* Mobile No and Email */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+                <div className="flex items-center">
+                  <label className="w-24 text-xs text-gray-600">
+                    Mobile No.
+                  </label>
+                  <input
+                    type="text"
+                    name="mobileNo"
+                    value={formData.mobileNo}
+                    onChange={handleInputChange}
+                    className="border border-gray-300 text-xs px-2 py-1 flex-1"
+                  />
+                </div>
+                <div className="flex items-center">
+                  <label className="w-24 text-xs text-gray-600">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="border border-gray-300 text-xs px-2 py-1 flex-1"
+                  />
+                </div>
+              </div>
 
-          {/* Row 6 */}
-          <div>
-            <label className="block text-sm font-medium">Company</label>
-            <input type="text" className="input" />
-          </div>
+              {/* Nationality and Corporate Name */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+                <div className="flex items-center">
+                  <label className="w-24 text-xs text-gray-600">
+                    Nationality
+                  </label>
+                  <input
+                    type="text"
+                    name="nationality"
+                    value={formData.nationality}
+                    onChange={handleInputChange}
+                    className="border border-gray-300 text-xs px-2 py-1 flex-1"
+                  />
+                </div>
+                <div className="flex items-center">
+                  <label className="w-24 text-xs text-gray-600">
+                    Corporate Name
+                  </label>
+                  <input
+                    type="text"
+                    name="corporateName"
+                    value={formData.corporateName}
+                    onChange={handleInputChange}
+                    className="border border-gray-300 text-xs px-2 py-1 flex-1"
+                  />
+                </div>
+              </div>
 
-          {/* Row 7 */}
-          <div>
-            <label className="block text-sm font-medium">Remark</label>
-            <textarea className="input h-28" />
-          </div>
+              {/* Company and empty column for alignment */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+                <div className="flex items-center">
+                  <label className="w-24 text-xs text-gray-600">Company</label>
+                  <input
+                    type="text"
+                    name="company"
+                    value={formData.company}
+                    onChange={handleInputChange}
+                    className="border border-gray-300 text-xs px-2 py-1 flex-1"
+                  />
+                </div>
+                <div className="flex items-center">
+                  {/* Empty div for alignment */}
+                </div>
+              </div>
 
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className="px-6 py-2 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700"
-            >
-              Save
-            </button>
+              {/* Remark */}
+              <div className="flex items-start mt-4">
+                <label className="w-24 text-xs text-gray-600 pt-1">
+                  Remark
+                </label>
+                <textarea
+                  name="remark"
+                  value={formData.remark}
+                  onChange={handleInputChange}
+                  className="border border-gray-300 text-xs px-2 py-1 flex-1 h-20"
+                />
+              </div>
+
+              {/* Sex and Emirates ID */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+                <div className="flex items-center">
+                  <label className="w-24 text-xs text-gray-600">Sex</label>
+                  <select
+                    name="sex"
+                    value={formData.sex}
+                    onChange={handleInputChange}
+                    className="border border-gray-300 text-xs px-2 py-1 w-40"
+                  >
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
+                </div>
+                <div className="flex items-center">
+                  <label className="w-24 text-xs text-gray-600">
+                    Emirates ID
+                  </label>
+                  <input
+                    type="text"
+                    name="emiratesId"
+                    value={formData.emiratesId}
+                    onChange={handleInputChange}
+                    className="border border-gray-300 text-xs px-2 py-1 flex-1"
+                  />
+                </div>
+              </div>
+
+              {/* Mobile and Email */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+                <div className="flex items-center">
+                  <label className="w-24 text-xs text-gray-600">
+                    Mobile No.
+                  </label>
+                  <input
+                    type="text"
+                    name="mobileNo"
+                    value={formData.mobileNo}
+                    onChange={handleInputChange}
+                    className="border border-gray-300 text-xs px-2 py-1 flex-1"
+                  />
+                </div>
+                <div className="flex items-center">
+                  <label className="w-24 text-xs text-gray-600">Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="border border-gray-300 text-xs px-2 py-1 flex-1"
+                  />
+                </div>
+              </div>
+
+              {/* Nationality and Company */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+                <div className="flex items-center">
+                  <label className="w-24 text-xs text-gray-600">
+                    Nationality
+                  </label>
+                  <input
+                    type="text"
+                    name="nationality"
+                    value={formData.nationality}
+                    onChange={handleInputChange}
+                    className="border border-gray-300 text-xs px-2 py-1 flex-1"
+                  />
+                </div>
+                <div className="flex items-center">
+                  <label className="w-24 text-xs text-gray-600">Company</label>
+                  <input
+                    type="text"
+                    name="company"
+                    value={formData.company}
+                    onChange={handleInputChange}
+                    className="border border-gray-300 text-xs px-2 py-1 flex-1"
+                  />
+                </div>
+              </div>
+
+              {/* Corporate Name */}
+              <div className="mb-2">
+                <div className="flex items-center">
+                  <label className="w-24 text-xs text-gray-600">
+                    Corporate
+                  </label>
+                  <input
+                    type="text"
+                    name="corporateName"
+                    value={formData.corporateName}
+                    onChange={handleInputChange}
+                    className="border border-gray-300 text-xs px-2 py-1 flex-1"
+                  />
+                </div>
+              </div>
+
+              {/* Remark */}
+              <div className="mb-2">
+                <div className="flex items-start">
+                  <label className="w-24 text-xs text-gray-600 pt-1">
+                    Remark
+                  </label>
+                  <textarea
+                    name="remark"
+                    value={formData.remark}
+                    onChange={handleInputChange}
+                    className="border border-gray-300 text-xs px-2 py-1 flex-1 h-20"
+                  />
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex justify-end space-x-2 mt-4 pt-2 border-t">
+                <button
+                  type="button"
+                  className="px-3 py-1 bg-gray-200 text-gray-700 text-xs rounded hover:bg-gray-300"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
           </div>
-        </form>
+        ) : (
+          <div className="border border-gray-300 p-4 rounded-sm text-center text-gray-500">
+            {activeSubTab} content will be displayed here
+          </div>
+        )}
       </div>
     </div>
   );
