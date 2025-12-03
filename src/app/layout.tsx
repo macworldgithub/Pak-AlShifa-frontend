@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import ClientLayout from "@/components/layout/ClientLayout"; 
+import ClientLayout from "@/components/layout/ClientLayout";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Pak Al-Shifa Medical Center",
+  title: "Pak Al-Shifa",
   description: "Dashboard App",
 };
 
