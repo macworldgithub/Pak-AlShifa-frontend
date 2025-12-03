@@ -3,6 +3,7 @@
 // import Features from "@/components/sections/Features";
 
 import LoginPage from "./login/page";
+import Shifa3 from "./shifa3/page";
 
 // import Contact from "@/components/sections/Contact";
 
@@ -12,7 +13,8 @@ import LoginPage from "./login/page";
 export default function HomePage() {
   return (
     <main className="relative">
-      <LoginPage />
+      {/* <LoginPage /> */}
+      <Shifa3 />
       {/* <HeroSection />
       <Features />
       <Small />
