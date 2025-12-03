@@ -1,8 +1,8 @@
-// New: components/layout/ClientLayout.tsx (Client Component: Handles useState for sidebar)
+
 "use client";
 import { ReactNode, useState } from 'react';
 import Sidebar from './Sidebar';
-import Navbar from './Navbar'; // Your Navbar component
+import Navbar from './Navbar'; 
 
 interface ClientLayoutProps {
   children: ReactNode;

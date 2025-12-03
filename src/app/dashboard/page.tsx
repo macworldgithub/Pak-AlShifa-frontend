@@ -4,11 +4,8 @@
 
 export default function DashboardPage() {
   return (
-    <div className="space-y-6">
-      {/* <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1> */}
-      {/* <StatsCards />
-      <PatientOverview />
-      <StatusCards /> */}
+    <div className=" items-center justify-center flex flex-col text-white bg-blue-400">
+      dashboard page
     </div>
   );
 }

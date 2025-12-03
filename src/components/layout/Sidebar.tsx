@@ -1,11 +1,10 @@
-// Updated: components/layout/Sidebar.tsx (Fixed: No window access; CSS-driven responsive + JS toggle)
 "use client";
 import { sidebarMenu } from "../../data/sidebarMenu";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import logo from "../../../public/images/logo.png";
-// Import icons (unchanged)
+
 import {
   FaFolderOpen,
   FaQuestionCircle,
