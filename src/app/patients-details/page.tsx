@@ -1,8 +1,19 @@
+// src/app/patients-details/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Tabs from "./Tabs";
 import PatientForm from "./Form";
+import ComplaintForm from "./ComplaintForm";
+import VaccineForm from "./VaccineForm";
+import DiagnosisForm from "./DiagnosisForm";
+import MedicalAssessmentForm from "./MedicalAssessmentForm";
+import TreatmentForm from "./TreatmentForm";
+import MedicineForm from "./MedicineForm";
+import NotesForm from "./NotesForm";
+import PatientFilesForm from "./PatientFilesForm";
+import DischargeForm from "./DischargeForm";
+import ECGForm from "./ECGForm";
 import Data from "./Data";
 
 export default function Shifa3() {
@@ -24,6 +35,17 @@ export default function Shifa3() {
     remark: "",
   });
 
+  // Set default subtab when main tab changes
+  useEffect(() => {
+    if (activeTab === "Receptionalist") {
+      setActiveSubTab("Patients Details");
+    } else if (activeTab === "Nursing Assessments") {
+      setActiveSubTab("Nursing");
+    } else if (activeTab === "Doctor Assessments") {
+      setActiveSubTab("Vaccine"); // Default to Vaccine for Doctor Assessments
+    }
+  }, [activeTab]);
+
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -36,6 +58,49 @@ export default function Shifa3() {
     }));
   };
 
+  const renderContent = () => {
+    switch (activeSubTab) {
+      case "Patients Details":
+        return (
+          <>
+            <PatientForm
+              formData={formData}
+              handleInputChange={handleInputChange}
+            />
+            <div className="mt-8">
+              <Data />
+            </div>
+          </>
+        );
+      case "Complaint":
+        return <ComplaintForm />;
+      case "Vaccine":
+        return <VaccineForm />;
+      case "Diagnosis":
+        return <DiagnosisForm />;
+      case "Medical Assessment":
+        return <MedicalAssessmentForm />;
+      case "Treatment":
+        return <TreatmentForm />;
+      case "Medicine":
+        return <MedicineForm />;
+      case "Notes":
+        return <NotesForm />;
+      case "Patient Files":
+        return <PatientFilesForm />;
+      case "Discharge":
+        return <DischargeForm />;
+      case "ECG":
+        return <ECGForm />;
+      default:
+        return (
+          <div className="border border-gray-300 p-4 rounded-sm text-center text-gray-500">
+            {activeSubTab} content will be displayed here
+          </div>
+        );
+    }
+  };
+
   return (
     <div className="w-full">
       <Tabs
@@ -46,23 +111,7 @@ export default function Shifa3() {
       />
 
       {/* Main Content */}
-      <div className="space-y-8">
-        {activeSubTab === "Patients Details" ? (
-          <>
-            <PatientForm
-              formData={formData}
-              handleInputChange={handleInputChange}
-            />
-            <div className="mt-8">
-              <Data />
-            </div>
-          </>
-        ) : (
-          <div className="border border-gray-300 p-4 rounded-sm text-center text-gray-500">
-            {activeSubTab} content will be displayed here
-          </div>
-        )}
-      </div>
+      <div className="space-y-8">{renderContent()}</div>
     </div>
   );
 }
