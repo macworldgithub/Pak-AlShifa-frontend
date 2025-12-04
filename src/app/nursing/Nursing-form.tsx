@@ -32,11 +32,13 @@ export default function NursingForm() {
   };
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow">
+    <div className="bg-white p-4 rounded">
       <h2 className="text-lg font-semibold mb-4">Nursing Assessment</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-          <div>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* First Row - 7 fields */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
+          {/* BPS/BPD */}
+          <div className="w-full">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               BPS/BPD
             </label>
@@ -45,12 +47,12 @@ export default function NursingForm() {
               name="bpsBpd"
               value={formData.bpsBpd}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="BPS/BPD"
+              className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
             />
           </div>
 
-          <div>
+          {/* Pulse */}
+          <div className="w-full">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Pulse
             </label>
@@ -59,12 +61,12 @@ export default function NursingForm() {
               name="pulse"
               value={formData.pulse}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Pulse"
+              className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
             />
           </div>
 
-          <div>
+          {/* Resp. */}
+          <div className="w-full">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Resp.
             </label>
@@ -73,12 +75,12 @@ export default function NursingForm() {
               name="resp"
               value={formData.resp}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Resp."
+              className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
             />
           </div>
 
-          <div>
+          {/* Ht(Cms) */}
+          <div className="w-full">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Ht(Cms)
             </label>
@@ -87,12 +89,12 @@ export default function NursingForm() {
               name="height"
               value={formData.height}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Ht(Cms)"
+              className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
             />
           </div>
 
-          <div>
+          {/* Wt(Kg) */}
+          <div className="w-full">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Wt(Kg)
             </label>
@@ -101,12 +103,12 @@ export default function NursingForm() {
               name="weight"
               value={formData.weight}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Wt(Kg)"
+              className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
             />
           </div>
 
-          <div>
+          {/* BMI */}
+          <div className="w-full">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               BMI
             </label>
@@ -115,12 +117,12 @@ export default function NursingForm() {
               name="bmi"
               value={formData.bmi}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="BMI"
+              className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
             />
           </div>
 
-          <div>
+          {/* Temp(C) */}
+          <div className="w-full">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Temp(C)
             </label>
@@ -129,27 +131,27 @@ export default function NursingForm() {
               name="temp"
               value={formData.temp}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Temp(C)"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              GRBS
-            </label>
-            <input
-              type="text"
-              name="grbs"
-              value={formData.grbs}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="GRBS"
+              className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
             />
           </div>
         </div>
 
-        <div className="mb-4">
+        {/* GRBS - Full width on mobile, then takes appropriate columns */}
+        <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/7">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            GRBS
+          </label>
+          <input
+            type="text"
+            name="grbs"
+            value={formData.grbs}
+            onChange={handleChange}
+            className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
+          />
+        </div>
+
+        {/* Remarks - Always full width */}
+        <div className="w-full">
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Remarks
           </label>
@@ -158,15 +160,15 @@ export default function NursingForm() {
             value={formData.remarks}
             onChange={handleChange}
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter remarks here..."
+            className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
           />
         </div>
 
+        {/* Save Button */}
         <div className="flex justify-end">
           <button
             type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="px-4 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
           >
             Save
           </button>
