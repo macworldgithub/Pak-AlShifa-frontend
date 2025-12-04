@@ -1,15 +1,23 @@
 // components/dashboard/DiagnosisCodesChart.tsx
-import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import React from "react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 const data = [
-  { code: 'J09', value: 50 },
-  { code: 'J22', value: 40 },
-  { code: 'R13', value: 60 },
-  { code: 'J29', value: 30 },
-  { code: 'M28', value: 70 },
-  { code: 'K20', value: 20 },
-  { code: 'N30', value: 80 },
+  { code: "J09", value: 50 },
+  { code: "J22", value: 40 },
+  { code: "R13", value: 60 },
+  { code: "J29", value: 30 },
+  { code: "M28", value: 70 },
+  { code: "K20", value: 20 },
+  { code: "N30", value: 80 },
 ];
 
 const DiagnosisCodesChart: React.FC = () => {
@@ -25,7 +33,12 @@ const DiagnosisCodesChart: React.FC = () => {
           <XAxis dataKey="code" />
           <YAxis />
           <Tooltip />
-          <Line type="monotone" dataKey="value" stroke="#3B82F6" strokeWidth={2} />
+          <Line
+            type="monotone"
+            dataKey="value"
+            stroke="#18a0fb"
+            strokeWidth={2}
+          />
         </LineChart>
       </ResponsiveContainer>
     </div>

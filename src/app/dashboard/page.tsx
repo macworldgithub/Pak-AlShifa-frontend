@@ -22,11 +22,11 @@ const Dashboard: React.FC = () => {
       <TopCards />
       <PatientOverviewChart />
       <StatusCards />
-      {/* <DepartmentsChart />
+      <DepartmentsChart />
       <DiagnosisChart />
       <MedicinesChart />
       <MonthlyServiceStats />
-      <DiagnosisCodesChart /> */}
+      <DiagnosisCodesChart />
     </div>
     // </div>
   );
