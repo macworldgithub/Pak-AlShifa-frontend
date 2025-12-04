@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import Tabs from "./Tabs";
 import PatientForm from "./Form";
 import ComplaintForm from "./ComplaintForm";
+import NursingForm from "../nursing/Nursing-form";
 import VaccineForm from "./VaccineForm";
 import DiagnosisForm from "./DiagnosisForm";
 import MedicalAssessmentForm from "./MedicalAssessmentForm";
@@ -72,6 +73,8 @@ export default function Shifa3() {
             </div>
           </>
         );
+      case "Nursing":
+        return <NursingForm />;
       case "Complaint":
         return <ComplaintForm />;
       case "Vaccine":
