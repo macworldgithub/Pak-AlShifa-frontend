@@ -13,6 +13,24 @@ export default function Tabs({
   setActiveTab,
   setActiveSubTab,
 }: TabsProps) {
+  const subTabsMap: { [key: string]: string[] } = {
+    Receptionalist: ["Patients Details"],
+    "Nursing Assessments": ["Nursing", "Complaint"],
+    "Doctor Assessments": [
+      "Vaccine",
+      "Diagnosis",
+      "Medical Assessment",
+      "Treatment",
+      "Medicine",
+      "Notes",
+      "Patient Files",
+      "Discharge",
+      "ECG",
+    ],
+  };
+
+  const currentSubTabs = subTabsMap[activeTab] || [];
+
   return (
     <>
       {/* Main Navigation Tabs */}
@@ -36,20 +54,7 @@ export default function Tabs({
 
       {/* Sub Navigation */}
       <div className="flex flex-wrap gap-1 mb-4">
-        {[
-          "Patients Details",
-          "Nursing",
-          "Complaint",
-          "Vaccine",
-          "Diagnosis",
-          "Medical Assessment",
-          "Treatment",
-          "Medicine",
-          "Notes",
-          "Patient Files",
-          "Discharge",
-          "ECG",
-        ].map((tab) => (
+        {currentSubTabs.map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveSubTab(tab)}

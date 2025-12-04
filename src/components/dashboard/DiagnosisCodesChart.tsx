@@ -1,4 +1,3 @@
-// components/dashboard/DiagnosisCodesChart.tsx
 import React from "react";
 import {
   LineChart,
