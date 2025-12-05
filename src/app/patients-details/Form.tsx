@@ -97,7 +97,7 @@ export default function PatientForm({
               value={formData.age}
               onChange={handleInputChange}
               placeholder="35"
-              className="w-full px-3 py-2 border border-gray-300 rounded text-xs"
+              className="w-full px-3 py-2 border border-gray-300 rounded text-xs text-black placeholder:text-black"
             />
           </div>
 
@@ -129,7 +129,7 @@ export default function PatientForm({
               value={formData.emiratesId}
               onChange={handleInputChange}
               placeholder="784-XXXX-XXXXXXX-X"
-              className="w-full px-3 py-2 border border-gray-300 rounded text-xs"
+              className="w-full px-3 py-2 border border-gray-300 rounded text-xs text-black placeholder:text-black"
             />
           </div>
           <div>
@@ -142,7 +142,7 @@ export default function PatientForm({
               value={formData.mobileNo}
               onChange={handleInputChange}
               placeholder="05X XXXXXXX"
-              className="w-full px-3 py-2 border border-gray-300 rounded text-xs"
+              className="w-full px-3 py-2 border border-gray-300 rounded text-xs text-black placeholder:text-black"
             />
           </div>
           <div>
@@ -207,7 +207,7 @@ export default function PatientForm({
             value={formData.remark}
             onChange={handleInputChange as any}
             rows={4}
-            className="w-full px-3 py-2 border border-gray-300 rounded text-xs resize-none"
+            className="w-full px-3 py-2 border border-gray-300 rounded text-xs resize-none text-black placeholder:text-black"
             placeholder="Enter any remarks..."
           />
         </div>
