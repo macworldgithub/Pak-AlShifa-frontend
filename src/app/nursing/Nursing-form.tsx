@@ -1,6 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Select } from "antd";
+import { BACKEND_URL } from "@/config"; // Adjust path if necessary
+
+interface Visit {
+  _id: string;
+  visitDate: string;
+  patient: { name: string };
+  doctorAssigned: { fullName: string };
+}
 
 export default function NursingForm() {
   const [formData, setFormData] = useState({
@@ -14,6 +23,94 @@ export default function NursingForm() {
     grbs: "",
     remarks: "",
   });
+  const [visits, setVisits] = useState<Visit[]>([]);
+  const [visitId, setVisitId] = useState<string>("");
+  const [assessmentId, setAssessmentId] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchVisits();
+  }, []);
+
+  const fetchVisits = async () => {
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      setError("Please login first.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${BACKEND_URL}/visits`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch visits");
+      }
+
+      const data: Visit[] = await response.json();
+      setVisits(data);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to fetch visits. Please try again.");
+    }
+  };
+
+  const handleVisitChange = async (value: string) => {
+    setVisitId(value);
+    setAssessmentId("");
+    setFormData({
+      bpsBpd: "",
+      pulse: "",
+      resp: "",
+      height: "",
+      weight: "",
+      bmi: "",
+      temp: "",
+      grbs: "",
+      remarks: "",
+    });
+
+    if (value) {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        setError("Please login first.");
+        return;
+      }
+
+      try {
+        const response = await fetch(`${BACKEND_URL}/nursing-assessments/visit/${value}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const assessment = await response.json();
+          if (assessment) {
+            setFormData({
+              bpsBpd: assessment.bpsBpd || "",
+              pulse: assessment.pulse || "",
+              resp: assessment.resp || "",
+              height: assessment.height || "",
+              weight: assessment.weight || "",
+              bmi: assessment.bmi || "",
+              temp: assessment.temp || "",
+              grbs: assessment.grbs || "",
+              remarks: assessment.remarks || "",
+            });
+            setAssessmentId(assessment._id);
+          }
+        }
+      } catch (err) {
+        console.error(err);
+        // setError("Failed to fetch assessment.");
+      }
+    }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -25,15 +122,79 @@ export default function NursingForm() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log("Form submitted:", formData);
+    setError(null);
+    setSuccess(null);
+
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      setError("Please login first.");
+      return;
+    }
+
+    if (!visitId) {
+      setError("Please select a visit.");
+      return;
+    }
+
+    try {
+      let response;
+      if (assessmentId) {
+        // Update
+        response = await fetch(`${BACKEND_URL}/nursing-assessments/${assessmentId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(formData),
+        });
+      } else {
+        // Create
+        response = await fetch(`${BACKEND_URL}/nursing-assessments`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ ...formData, visit: visitId }),
+        });
+      }
+
+      if (!response.ok) {
+        throw new Error(assessmentId ? "Failed to update assessment" : "Failed to create assessment");
+      }
+
+      setSuccess(assessmentId ? "Assessment updated successfully." : "Assessment created successfully.");
+    } catch (err) {
+      console.error(err);
+      setError("Failed to save assessment. Please try again.");
+    }
   };
 
   return (
     <div className="bg-white p-4 rounded">
       <h2 className="text-lg font-semibold mb-4">Nursing Assessment</h2>
+
+      {/* Select Visit */}
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700 mb-1">Select Visit</label>
+        <Select
+          value={visitId}
+          onChange={handleVisitChange}
+          className="w-full"
+          placeholder="Select a visit"
+        >
+          {visits.map((visit) => (
+            <Select.Option key={visit._id} value={visit._id}>
+              {visit.patient.name}-{visit.doctorAssigned.fullName}-{visit.visitDate.slice(0, 10)}
+
+            </Select.Option>
+          ))}
+        </Select>
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* First Row - 7 fields */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
@@ -47,7 +208,7 @@ export default function NursingForm() {
               name="bpsBpd"
               value={formData.bpsBpd}
               onChange={handleChange}
-              className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
+              className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-900"
             />
           </div>
 
@@ -61,7 +222,7 @@ export default function NursingForm() {
               name="pulse"
               value={formData.pulse}
               onChange={handleChange}
-              className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
+              className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-900"
             />
           </div>
 
@@ -75,7 +236,7 @@ export default function NursingForm() {
               name="resp"
               value={formData.resp}
               onChange={handleChange}
-              className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
+              className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-900"
             />
           </div>
 
@@ -89,7 +250,7 @@ export default function NursingForm() {
               name="height"
               value={formData.height}
               onChange={handleChange}
-              className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
+              className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-900"
             />
           </div>
 
@@ -103,7 +264,7 @@ export default function NursingForm() {
               name="weight"
               value={formData.weight}
               onChange={handleChange}
-              className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
+              className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-900"
             />
           </div>
 
@@ -117,7 +278,7 @@ export default function NursingForm() {
               name="bmi"
               value={formData.bmi}
               onChange={handleChange}
-              className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
+              className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-900"
             />
           </div>
 
@@ -131,7 +292,7 @@ export default function NursingForm() {
               name="temp"
               value={formData.temp}
               onChange={handleChange}
-              className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
+              className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-900"
             />
           </div>
         </div>
@@ -146,7 +307,7 @@ export default function NursingForm() {
             name="grbs"
             value={formData.grbs}
             onChange={handleChange}
-            className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
+            className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-900"
           />
         </div>
 
@@ -160,9 +321,12 @@ export default function NursingForm() {
             value={formData.remarks}
             onChange={handleChange}
             rows={3}
-            className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
+            className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-900"
           />
         </div>
+
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+        {success && <p className="text-green-500 text-sm">{success}</p>}
 
         {/* Save Button */}
         <div className="flex justify-end">
