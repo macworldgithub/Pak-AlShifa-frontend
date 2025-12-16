@@ -83,7 +83,7 @@ export default function NotesForm() {
         throw new Error("Failed to fetch notes");
       }
 
-      const data: Note[] = await response.json() || [];
+      const data: Note[] = (await response.json()) || [];
       setNotesList(data);
     } catch (err) {
       console.error(err);
@@ -152,10 +152,14 @@ export default function NotesForm() {
       }
 
       if (!response.ok) {
-        throw new Error(editingId ? "Failed to update note" : "Failed to create note");
+        throw new Error(
+          editingId ? "Failed to update note" : "Failed to create note"
+        );
       }
 
-      setSuccess(editingId ? "Note updated successfully." : "Note created successfully.");
+      setSuccess(
+        editingId ? "Note updated successfully." : "Note created successfully."
+      );
       setFormData(initialFormData);
       setEditingId(null);
       fetchNotes(visitId);
@@ -181,7 +185,9 @@ export default function NotesForm() {
 
       {/* Select Visit */}
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">Select Visit</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Select Visit
+        </label>
         <Select
           value={visitId}
           onChange={handleVisitChange}
@@ -237,11 +243,20 @@ export default function NotesForm() {
 
       {/* Existing Notes */}
       <div>
-        <h3 className="text-lg font-semibold mb-4">Existing Notes</h3>
+        <h3 className="text-lg font-semibold mb-4 text-black">
+          Existing Notes
+        </h3>
         {notesList.map((note) => (
-          <div key={note._id} className="border border-gray-300 p-4 mb-4 rounded-md">
-            <p className="text-black"><strong>Template:</strong> {note.template}</p>
-            <p className="text-black"><strong>Notes:</strong> {note.noteContent}</p>
+          <div
+            key={note._id}
+            className="border border-gray-300 p-4 mb-4 rounded-md"
+          >
+            <p className="text-black">
+              <strong>Template:</strong> {note.template}
+            </p>
+            <p className="text-black">
+              <strong>Notes:</strong> {note.noteContent}
+            </p>
             <button
               onClick={() => handleEdit(note)}
               className="mt-2 px-4 py-1 bg-blue-600 text-white rounded-md"
