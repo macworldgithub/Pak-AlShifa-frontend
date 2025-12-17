@@ -1,7 +1,15 @@
-// src/app/patients-details/ECGForm.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Select } from "antd";
+import { BACKEND_URL } from "@/config"; // Adjust path if necessary
+
+interface Visit {
+  _id: string;
+  visitDate: string;
+  patient: { name: string };
+  doctorAssigned: { fullName: string };
+}
 
 interface ECGFormData {
   position: string;
@@ -41,6 +49,113 @@ export default function ECGForm() {
     rhythm: "",
     additionalFindings: "",
   });
+  const [visits, setVisits] = useState<Visit[]>([]);
+  const [visitId, setVisitId] = useState<string>("");
+  const [ecgId, setEcgId] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchVisits();
+  }, []);
+
+  const fetchVisits = async () => {
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      setError("Please login first.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${BACKEND_URL}/visits`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch visits");
+      }
+
+      const data: Visit[] = await response.json();
+      setVisits(data);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to fetch visits. Please try again.");
+    }
+  };
+
+  const handleVisitChange = async (value: string) => {
+    setVisitId(value);
+    setEcgId("");
+    setFormData({
+      position: "",
+      pWave: "",
+      standardizationImv: "",
+      prInterval: "",
+      mechanism: "",
+      qrsComplexes: "",
+      voltage: "",
+      qTduration: "",
+      electricalAxis: "",
+      sTsegment: "",
+      auricularRate: "",
+      tWave: "",
+      ventricularRate: "",
+      qWave: "",
+      rhythm: "",
+      additionalFindings: "",
+    });
+
+    if (value) {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        setError("Please login first.");
+        return;
+      }
+
+      try {
+        const response = await fetch(`${BACKEND_URL}/ecgs/visit/${value}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          try {
+            const ecg = await response.json();
+            if (ecg) {
+              setFormData({
+                position: ecg.position || "",
+                pWave: ecg.pWave || "",
+                standardizationImv: ecg.standardizationImv || "",
+                prInterval: ecg.prInterval || "",
+                mechanism: ecg.mechanism || "",
+                qrsComplexes: ecg.qrsComplexes || "",
+                voltage: ecg.voltage || "",
+                qTduration: ecg.qTduration || "",
+                electricalAxis: ecg.electricalAxis || "",
+                sTsegment: ecg.sTsegment || "",
+                auricularRate: ecg.auricularRate || "",
+                tWave: ecg.tWave || "",
+                ventricularRate: ecg.ventricularRate || "",
+                qWave: ecg.qWave || "",
+                rhythm: ecg.rhythm || "",
+                additionalFindings: ecg.additionalFindings || "",
+              });
+              setEcgId(ecg._id);
+            }
+          } catch (jsonErr) {
+            // No body, no ECG exists
+            console.log("No existing ECG found.");
+          }
+        }
+      } catch (err) {
+        console.error(err);
+        setError("Failed to fetch ECG.");
+      }
+    }
+  };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -52,9 +167,58 @@ export default function ECGForm() {
     }));
   };
 
-  const handleSave = () => {
-    // Handle save logic here, e.g., API call
-    console.log("Saving ECG data:", formData);
+  const handleSave = async () => {
+    setError(null);
+    setSuccess(null);
+
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      setError("Please login first.");
+      return;
+    }
+
+    if (!visitId) {
+      setError("Please select a visit.");
+      return;
+    }
+
+    try {
+      let response;
+      if (ecgId) {
+        // Update
+        response = await fetch(`${BACKEND_URL}/ecgs/${ecgId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(formData),
+        });
+      } else {
+        // Create
+        response = await fetch(`${BACKEND_URL}/ecgs`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ ...formData, visit: visitId }),
+        });
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          ecgId ? "Failed to update ECG" : "Failed to create ECG"
+        );
+      }
+
+      setSuccess(
+        ecgId ? "ECG updated successfully." : "ECG created successfully."
+      );
+    } catch (err) {
+      console.error(err);
+      setError("Failed to save ECG. Please try again.");
+    }
   };
 
   const fields = [
@@ -87,6 +251,26 @@ export default function ECGForm() {
         ECG
       </h2>
 
+      {/* Select Visit */}
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Select Visit
+        </label>
+        <Select
+          value={visitId}
+          onChange={handleVisitChange}
+          className="w-full"
+          placeholder="Select a visit"
+        >
+          {visits.map((visit) => (
+            <Select.Option key={visit._id} value={visit._id}>
+              {visit.patient.name}-{visit.doctorAssigned.fullName}-
+              {visit.visitDate.slice(0, 10)}
+            </Select.Option>
+          ))}
+        </Select>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         {fields.map((field) => (
           <div key={field.name}>
@@ -99,7 +283,7 @@ export default function ECGForm() {
                 value={(formData as any)[field.name]}
                 onChange={handleInputChange}
                 rows={field.rows}
-                className="w-full p-3 border border-gray-300 rounded-md resize-none bg-gray-100 focus:outline-none"
+                className="w-full p-3 border border-gray-300 rounded-md resize-none bg-gray-100 focus:outline-none text-black"
               />
             ) : (
               <input
@@ -113,6 +297,9 @@ export default function ECGForm() {
           </div>
         ))}
       </div>
+
+      {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+      {success && <p className="text-green-500 text-sm mb-4">{success}</p>}
 
       {/* Save Button */}
       <div className="flex justify-end">
