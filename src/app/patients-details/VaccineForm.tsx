@@ -12,9 +12,9 @@ interface Visit {
 }
 
 interface VaccineFormData {
-  vaccination: string;
+  vaccinationName: string;
   dose: string;
-  vaccinationExpiryDate: string;
+  expiryDate: string;
   duration: string;
   quantity: string;
   unit: string;
@@ -24,9 +24,9 @@ interface VaccineFormData {
 
 export default function VaccineForm() {
   const [formData, setFormData] = useState<VaccineFormData>({
-    vaccination: "",
+    vaccinationName: "",
     dose: "",
-    vaccinationExpiryDate: "",
+    expiryDate: "",
     duration: "",
     quantity: "",
     unit: "",
@@ -73,9 +73,9 @@ export default function VaccineForm() {
     setVisitId(value);
     setVaccinationId("");
     setFormData({
-      vaccination: "",
+      vaccinationName: "",
       dose: "",
-      vaccinationExpiryDate: "",
+      expiryDate: "",
       duration: "",
       quantity: "",
       unit: "",
@@ -91,11 +91,14 @@ export default function VaccineForm() {
       }
 
       try {
-        const response = await fetch(`${BACKEND_URL}/vaccinations/visit/${value}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          `${BACKEND_URL}/vaccinations/visit/${value}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (response.ok) {
           try {
@@ -103,11 +106,15 @@ export default function VaccineForm() {
             if (vaccinations && vaccinations.length > 0) {
               const vaccination = vaccinations[0]; // Load the first one if multiple
               setFormData({
-                vaccination: vaccination.vaccination || "",
+                vaccinationName: vaccination.vaccinationName || "",
                 dose: vaccination.dose || "",
-                vaccinationExpiryDate: vaccination.vaccinationExpiryDate || "",
+                expiryDate: vaccination.expiryDate
+                  ? vaccination.expiryDate.slice(0, 10)
+                  : "",
                 duration: vaccination.duration || "",
-                quantity: vaccination.quantity || "",
+                quantity: vaccination.quantity
+                  ? vaccination.quantity.toString()
+                  : "",
                 unit: vaccination.unit || "",
                 description: vaccination.description || "",
                 lotNumber: vaccination.lotNumber || "",
@@ -151,6 +158,11 @@ export default function VaccineForm() {
       return;
     }
 
+    const bodyData = {
+      ...formData,
+      quantity: formData.quantity ? Number(formData.quantity) : undefined,
+    };
+
     try {
       let response;
       if (vaccinationId) {
@@ -161,7 +173,7 @@ export default function VaccineForm() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(bodyData),
         });
       } else {
         // Create
@@ -171,15 +183,23 @@ export default function VaccineForm() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ ...formData, visit: visitId }),
+          body: JSON.stringify({ ...bodyData, visit: visitId }),
         });
       }
 
       if (!response.ok) {
-        throw new Error(vaccinationId ? "Failed to update vaccination" : "Failed to create vaccination");
+        throw new Error(
+          vaccinationId
+            ? "Failed to update vaccination"
+            : "Failed to create vaccination"
+        );
       }
 
-      setSuccess(vaccinationId ? "Vaccination updated successfully." : "Vaccination created successfully.");
+      setSuccess(
+        vaccinationId
+          ? "Vaccination updated successfully."
+          : "Vaccination created successfully."
+      );
     } catch (err) {
       console.error(err);
       setError("Failed to save vaccination. Please try again.");
@@ -194,7 +214,9 @@ export default function VaccineForm() {
 
       {/* Select Visit */}
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">Select Visit</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Select Visit
+        </label>
         <Select
           value={visitId}
           onChange={handleVisitChange}
@@ -203,7 +225,8 @@ export default function VaccineForm() {
         >
           {visits.map((visit) => (
             <Select.Option key={visit._id} value={visit._id}>
-              {visit.patient.name}-{visit.doctorAssigned.fullName}-{visit.visitDate.slice(0, 10)}
+              {visit.patient.name}-{visit.doctorAssigned.fullName}-
+              {visit.visitDate.slice(0, 10)}
             </Select.Option>
           ))}
         </Select>
@@ -218,8 +241,8 @@ export default function VaccineForm() {
           </label>
           <input
             type="text"
-            name="vaccination"
-            value={formData.vaccination}
+            name="vaccinationName"
+            value={formData.vaccinationName}
             onChange={handleInputChange}
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none bg-gray-100 text-black"
           />
@@ -250,8 +273,8 @@ export default function VaccineForm() {
           </label>
           <input
             type="date"
-            name="vaccinationExpiryDate"
-            value={formData.vaccinationExpiryDate}
+            name="expiryDate"
+            value={formData.expiryDate}
             onChange={handleInputChange}
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none bg-gray-100 text-black"
           />

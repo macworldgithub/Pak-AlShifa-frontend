@@ -14,14 +14,14 @@ interface Visit {
 interface ECGFormData {
   position: string;
   pWave: string;
-  standardizationImv: string;
+  standardization: string;
   prInterval: string;
   mechanism: string;
   qrsComplexes: string;
   voltage: string;
-  qTduration: string;
+  qtDuration: string;
   electricalAxis: string;
-  sTsegment: string;
+  stSegment: string;
   auricularRate: string;
   tWave: string;
   ventricularRate: string;
@@ -34,14 +34,14 @@ export default function ECGForm() {
   const [formData, setFormData] = useState<ECGFormData>({
     position: "",
     pWave: "",
-    standardizationImv: "",
+    standardization: "",
     prInterval: "",
     mechanism: "",
     qrsComplexes: "",
     voltage: "",
-    qTduration: "",
+    qtDuration: "",
     electricalAxis: "",
-    sTsegment: "",
+    stSegment: "",
     auricularRate: "",
     tWave: "",
     ventricularRate: "",
@@ -91,14 +91,14 @@ export default function ECGForm() {
     setFormData({
       position: "",
       pWave: "",
-      standardizationImv: "",
+      standardization: "",
       prInterval: "",
       mechanism: "",
       qrsComplexes: "",
       voltage: "",
-      qTduration: "",
+      qtDuration: "",
       electricalAxis: "",
-      sTsegment: "",
+      stSegment: "",
       auricularRate: "",
       tWave: "",
       ventricularRate: "",
@@ -128,14 +128,14 @@ export default function ECGForm() {
               setFormData({
                 position: ecg.position || "",
                 pWave: ecg.pWave || "",
-                standardizationImv: ecg.standardizationImv || "",
+                standardization: ecg.standardization || "",
                 prInterval: ecg.prInterval || "",
                 mechanism: ecg.mechanism || "",
                 qrsComplexes: ecg.qrsComplexes || "",
                 voltage: ecg.voltage || "",
-                qTduration: ecg.qTduration || "",
+                qtDuration: ecg.qtDuration || "",
                 electricalAxis: ecg.electricalAxis || "",
-                sTsegment: ecg.sTsegment || "",
+                stSegment: ecg.stSegment || "",
                 auricularRate: ecg.auricularRate || "",
                 tWave: ecg.tWave || "",
                 ventricularRate: ecg.ventricularRate || "",
@@ -224,14 +224,14 @@ export default function ECGForm() {
   const fields = [
     { label: "Position", name: "position", type: "text" },
     { label: "P Wave", name: "pWave", type: "text" },
-    { label: "Standardization Imv", name: "standardizationImv", type: "text" },
+    { label: "Standardization", name: "standardization", type: "text" },
     { label: "PR Interval", name: "prInterval", type: "text" },
     { label: "Mechanism", name: "mechanism", type: "text" },
     { label: "QRS Complexes", name: "qrsComplexes", type: "text" },
     { label: "Voltage", name: "voltage", type: "text" },
-    { label: "Q-T Duration", name: "qTduration", type: "text" },
+    { label: "QT Duration", name: "qtDuration", type: "text" },
     { label: "Electrical Axis", name: "electricalAxis", type: "text" },
-    { label: "S-T Segment", name: "sTsegment", type: "text" },
+    { label: "ST Segment", name: "stSegment", type: "text" },
     { label: "Auricular Rate", name: "auricularRate", type: "text" },
     { label: "T-wave", name: "tWave", type: "text" },
     { label: "Ventricular Rate", name: "ventricularRate", type: "text" },
