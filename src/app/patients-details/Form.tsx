@@ -53,7 +53,7 @@ export default function PatientForm() {
       return;
     }
 
-    fetch(`${BACKEND_URL}/users?role=Admin`, {
+    fetch(`${BACKEND_URL}/users?role=Doctor`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -170,7 +170,7 @@ export default function PatientForm() {
       });
     } catch (err) {
       console.error(err);
-      setError( "Failed to create patient and visit. Please try again.");
+      setError("Failed to create patient and visit. Please try again.");
     }
   };
 
@@ -349,7 +349,9 @@ export default function PatientForm() {
 
         {/* Doctor Assigned */}
         <div className="max-w-lg">
-          <label className="block text-xs text-gray-600 mb-1">Doctor Assigned</label>
+          <label className="block text-xs text-gray-600 mb-1">
+            Doctor Assigned
+          </label>
           <select
             name="doctorAssigned"
             value={formData.doctorAssigned}

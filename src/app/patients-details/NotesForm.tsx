@@ -196,7 +196,8 @@ export default function NotesForm() {
         >
           {visits.map((visit) => (
             <Select.Option key={visit._id} value={visit._id}>
-              {visit.patient.name}-{visit.doctorAssigned.fullName}-{visit._id}
+              {visit.patient.name}-{visit.doctorAssigned.fullName}-
+              {visit.visitDate.slice(0, 10)}
             </Select.Option>
           ))}
         </Select>
