@@ -14,7 +14,7 @@ export default function Tabs({
   setActiveSubTab,
 }: TabsProps) {
   const subTabsMap: { [key: string]: string[] } = {
-    Receptionalist: ["Patients Details"],
+    Receptionist: ["Patients Details"],
     "Nursing Assessments": ["Nursing", "Complaint"],
     "Doctor Assessments": [
       "Vaccine",
@@ -35,7 +35,7 @@ export default function Tabs({
     <>
       {/* Main Navigation Tabs */}
       <div className="flex space-x-1 mb-2 overflow-x-auto pb-1">
-        {["Receptionalist", "Nursing Assessments", "Doctor Assessments"].map(
+        {["Receptionist", "Nursing Assessments", "Doctor Assessments"].map(
           (tab) => (
             <button
               key={tab}
