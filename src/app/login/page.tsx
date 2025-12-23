@@ -1,145 +1,159 @@
-'use client'; // Client for router
+"use client";
+
 import Image from "next/image";
-import { useRouter } from "next/navigation"; // For redirect
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import axios from "axios";
 import { BACKEND_URL } from "@/config";
 
 export default function LoginPage() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const email = e.currentTarget.email.value;
-    const password = e.currentTarget.password.value;
+    setError(null);
+    setLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
 
     try {
-      const response = await fetch(`${BACKEND_URL}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ identifier: email, password }),
+      const response = await axios.post(`${BACKEND_URL}/auth/login`, {
+        identifier: email,
+        password,
       });
 
-      if (!response.ok) {
-        throw new Error('Login failed');
-      }
+      // Axios automatically throws for non-2xx responses
+      const { access_token, user } = response.data;
 
-      const data = await response.json();
-      localStorage.setItem('access_token', data.access_token);
-      router.push('/dashboard'); // Redirect to dashboard on success
-    } catch (err) {
-      console.error(err);
-      setError('Invalid credentials. Please try again.');
+      localStorage.setItem("access_token", access_token);
+      localStorage.setItem("user_role", user.role);
+
+      router.push("/dashboard");
+    } catch (err: any) {
+      console.error("Login error:", err);
+
+      if (err.response?.status === 401 || err.response?.status === 400) {
+        setError("Invalid email or password. Please try again.");
+      } else {
+        setError("Something went wrong. Please try again later.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex h-screen bg-white">
-      {/* Left side with background image */}
-      <div className="hidden lg:flex lg:w-1/2 bg-[#1F2858] items-center justify-center p-12">
-        <div className="relative w-full max-w-md">
-          <div className="p-8">
-            <div className="relative w-full h-64">
-              <Image
-                src="/images/guide.png"
-                alt="Background"
-                fill
-                className="object-contain p-4"
-                priority
-              />
-            </div>
-          </div>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-4xl bg-white rounded-2xl shadow-xl overflow-hidden grid lg:grid-cols-2">
+        {/* Left Side - Decorative Image */}
+        <div className="hidden lg:flex items-center justify-center bg-[#1F2858] p-12">
+          <Image
+            src="/images/guide.png"
+            alt="Clinic Guide"
+            width={500}
+            height={400}
+            className="object-contain"
+            priority
+          />
         </div>
-      </div>
-      {/* Right side with login form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-        <div className="w-full max-w-md space-y-8">
-          <div className="text-center">
-            <div className="flex justify-center mb-4">
+
+        {/* Right Side - Login Form */}
+        <div className="flex items-center justify-center p-8 lg:p-12">
+          <div className="w-full max-w-md space-y-8">
+            {/* Logo & Tagline */}
+            <div className="text-center">
               <Image
                 src="/images/logo.png"
-                alt="Logo"
+                alt="Clinic Logo"
                 width={350}
-                height={70}
-                className="h-20 w-auto"
+                height={80}
+                className="mx-auto h-20 w-auto"
                 priority
               />
+              <p className="mt-3 text-sm font-medium text-gray-600">
+                Efficient, Organized, Reliable
+              </p>
             </div>
-            <p className="mt-2 text-sm text-gray-600">
-              Efficient, Organized, Reliable
-            </p>
-          </div>
-          <form className="mt-8 space-y-6" onSubmit={handleLogin}>
-            <div className="rounded-md shadow-sm space-y-4">
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  Email address
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
-                  placeholder="Enter your email"
-                />
+
+            {/* Form */}
+            <form onSubmit={handleLogin} className="space-y-6">
+              <div className="space-y-5">
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Email address
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    autoComplete="email"
+                    className="mt-1 w-full px-4 py-3 rounded-lg border border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1F2858] focus:border-transparent"
+                    placeholder="Enter your email"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Password
+                  </label>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    required
+                    autoComplete="current-password"
+                    className="mt-1 w-full px-4 py-3 rounded-lg border border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1F2858] focus:border-transparent"
+                    placeholder="Enter your password"
+                  />
+                </div>
               </div>
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  Password
+
+              {error && (
+                <p className="text-center text-sm font-medium text-red-600">
+                  {error}
+                </p>
+              )}
+
+              <div className="flex items-center justify-between text-sm">
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 rounded border-gray-300 text-[#1F2858] focus:ring-[#1F2858]"
+                  />
+                  <span className="ml-2 text-gray-700">Remember me</span>
                 </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
-                  placeholder="Enter your password"
-                />
-              </div>
-            </div>
-            {error && <p className="text-red-500 text-sm">{error}</p>}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                />
-                <label
-                  htmlFor="remember-me"
-                  className="ml-2 block text-sm text-gray-900"
-                >
-                  Remember me
-                </label>
-              </div>
-              <div className="text-sm">
                 <a
                   href="#"
-                  className="font-medium text-[#68A95F] hover:text-indigo-500"
+                  className="font-medium text-[#68A95F] hover:text-[#5a8f4f]"
                 >
                   Forgot password?
                 </a>
               </div>
-            </div>
-            <div>
+
               <button
                 type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#1F2858] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 hover:bg-[#162248]"
+                disabled={loading}
+                className={`w-full py-3 rounded-lg font-medium text-white transition ${
+                  loading
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-[#1F2858] hover:bg-[#162248] active:scale-95"
+                }`}
               >
-                Log in
+                {loading ? "Logging in..." : "Log in"}
               </button>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     </div>
