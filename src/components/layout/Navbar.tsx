@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import user from "../../../public/images/user.png";
 import { FaSearch, FaBell } from "react-icons/fa";
+import toggle from "../../../public/images/toggle.png";
 
 interface NavbarProps {
   onToggleSidebar: () => void;
@@ -34,9 +35,15 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
       <div className="flex items-center space-x-4">
         <button
           onClick={onToggleSidebar}
-          className="md:hidden p-2 text-gray-600 hover:text-gray-900 rounded-md hover:bg-gray-100"
+          className="md:hidden p-2 rounded-md hover:bg-gray-100 flex items-center justify-center"
         >
-          ☰
+          <Image
+            src={toggle}
+            alt="Toggle Sidebar"
+            width={24}
+            height={24}
+            className="object-contain"
+          />
         </button>
 
         <h1 className="text-xl font-bold text-gray-900">Dashboard</h1>
@@ -83,9 +90,7 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
           {/* Dropdown Menu */}
           {isDropdownOpen && (
             <div className="absolute right-0 mt-2 bg-white shadow-lg rounded-lg p-3 z-50 min-w-[160px]">
-              <p className="text-sm font-medium text-gray-700">
-                Danny Bates
-              </p>
+              <p className="text-sm font-medium text-gray-700">Danny Bates</p>
               <p className="text-xs text-gray-500 mb-2">Admin</p>
               <button className="block w-full text-left px-3 py-1 text-red-600 hover:bg-red-50 rounded text-sm">
                 Logout
