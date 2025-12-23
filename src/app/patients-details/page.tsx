@@ -21,7 +21,7 @@ import SocialHistory from "./SocialHistory";
 import FamilyHistory from "./FamilyHistory";
 
 export default function Shifa3() {
-  const [activeTab, setActiveTab] = useState("Nursing Assessments");
+  const [activeTab, setActiveTab] = useState("Receptionist");
   const [activeSubTab, setActiveSubTab] = useState("Patients Details");
   const [formData, setFormData] = useState({
     visitDate: "",
@@ -41,7 +41,7 @@ export default function Shifa3() {
 
   // Set default subtab when main tab changes
   useEffect(() => {
-    if (activeTab === "Receptionalist") {
+    if (activeTab === "Receptionist") {
       setActiveSubTab("Patients Details");
     } else if (activeTab === "Nursing Assessments") {
       setActiveSubTab("Nursing");
@@ -84,7 +84,7 @@ export default function Shifa3() {
         return <PersonalAllergic />;
       case "Social History":
         return <SocialHistory />;
-        case "Family History":
+      case "Family History":
         return <FamilyHistory />;
       case "Vaccine":
         return <VaccineForm />;
