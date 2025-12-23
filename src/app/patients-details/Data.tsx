@@ -173,15 +173,17 @@ export default function PatientDataTable() {
         </div>
       </div>
 
-      {/* Ant Design Table */}
-      <Table
-        columns={columns}
-        dataSource={data}
-        pagination={false}
-        className="ant-table-custom"
-        rowClassName="hover:bg-gray-50 transition-colors"
-        bordered={false}
-      />
+      {/* Responsive Table Wrapper */}
+      <div className="w-full overflow-x-auto">
+        <Table
+          columns={columns}
+          dataSource={data}
+          pagination={false}
+          className="ant-table-custom min-w-max"
+          rowClassName="hover:bg-gray-50 transition-colors"
+          bordered={false}
+        />
+      </div>
     </div>
   );
 }
