@@ -28,14 +28,6 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
     //   {/* Sidebar */}
     //   <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-<<<<<<< HEAD
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden md:ml-[240px]">
-        {/* Navbar */}
-        <Navbar onToggleSidebar={toggleSidebar} />
-
-        {/* Page Content */}
-=======
     //   {/* Main Content - Shift right on desktop to account for fixed sidebar width */}
     //   <div className="flex-1 flex flex-col overflow-hidden md:ml-[240px]">
     //     {/* Navbar with toggle */}
@@ -61,7 +53,6 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
       {/* Main content always visible */}
       <div className="flex-1 flex flex-col overflow-hidden md:ml-[240px]">
         <Navbar onToggleSidebar={toggleSidebar} />
->>>>>>> 69803dcb0b60356c9dd6d8348460a02880df3a2a
         <main className="flex-1 overflow-y-auto p-6 bg-gray-100">
           {children}
         </main>
