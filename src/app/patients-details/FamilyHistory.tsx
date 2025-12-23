@@ -47,7 +47,9 @@ export default function FamilyHistory() {
   const [rows, setRows] = useState([]);
 
   // Toggle handler
-  const handleToggle = (option) => {
+
+  const handleToggle = (option: any) => {
+    //@ts-ignore
     setSelected((prev) => ({ ...prev, [option]: !prev[option] }));
   };
 
@@ -61,11 +63,13 @@ export default function FamilyHistory() {
               type="button"
               onClick={() => handleToggle(option)}
               className={`w-10 h-6 rounded-full flex items-center px-1 transition-colors duration-200 text-black  ${
+                //@ts-ignore
                 selected[option] ? "bg-red-600" : "bg-gray-300"
               }`}
             >
               <span
                 className={`inline-block w-4 h-4 rounded-full bg-white shadow transform transition-transform duration-200 text-black ${
+                  //@ts-ignore
                   selected[option] ? "translate-x-4" : ""
                 }`}
               />
