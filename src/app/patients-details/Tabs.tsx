@@ -15,7 +15,13 @@ export default function Tabs({
 }: TabsProps) {
   const subTabsMap: { [key: string]: string[] } = {
     Receptionist: ["Patients Details"],
-    "Nursing Assessments": ["Nursing", "Complaint"],
+    "Nursing Assessments": [
+      "Nursing",
+      "Complaint",
+      "Personal Allergic Details",
+      "Social History",
+      "Family History",
+    ],
     "Doctor Assessments": [
       "Vaccine",
       "Diagnosis",

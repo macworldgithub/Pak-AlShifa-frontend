@@ -16,6 +16,9 @@ import PatientFilesForm from "./PatientFilesForm";
 import DischargeForm from "./DischargeForm";
 import ECGForm from "./ECGForm";
 import Data from "./Data";
+import PersonalAllergic from "./PersonalAllergic";
+import SocialHistory from "./SocialHistory";
+import FamilyHistory from "./FamilyHistory";
 
 export default function Shifa3() {
   const [activeTab, setActiveTab] = useState("Nursing Assessments");
@@ -77,6 +80,12 @@ export default function Shifa3() {
         return <NursingForm />;
       case "Complaint":
         return <ComplaintForm />;
+      case "Personal Allergic Details":
+        return <PersonalAllergic />;
+      case "Social History":
+        return <SocialHistory />;
+        case "Family History":
+        return <FamilyHistory />;
       case "Vaccine":
         return <VaccineForm />;
       case "Diagnosis":
