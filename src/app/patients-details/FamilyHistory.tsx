@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Select } from "antd";
+import { Select, Table } from "antd";
 import { BACKEND_URL } from "@/config";
 
 const familyOptions = [
@@ -141,7 +141,7 @@ export default function FamilyHistory() {
     }
   };
 
-  // Toggle handler
+ 
   const handleToggle = (option: string) => {
     setSelectedConditions((prev) => ({ ...prev, [option]: !prev[option] }));
   };
@@ -181,7 +181,7 @@ export default function FamilyHistory() {
     try {
       let response;
       if (editingId) {
-        // Update
+       
         response = await fetch(`${BACKEND_URL}/family-histories/${editingId}`, {
           method: "PUT",
           headers: {
@@ -191,7 +191,7 @@ export default function FamilyHistory() {
           body: JSON.stringify(bodyData),
         });
       } else {
-        // Create
+      
         response = await fetch(`${BACKEND_URL}/family-histories`, {
           method: "POST",
           headers: {
@@ -271,7 +271,7 @@ export default function FamilyHistory() {
 
   return (
     <div className="w-full">
-      {/* Select Visit */}
+   
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Select Visit
@@ -291,8 +291,8 @@ export default function FamilyHistory() {
         </Select>
       </div>
 
-      {/* Toggles */}
-      <div className="grid grid-cols-4 gap-x-6 gap-y-2 mb-2">
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-2 mb-2">
         {familyOptions.map((option) => (
           <div key={option} className="flex items-center gap-2 text-black">
             <button
@@ -313,15 +313,21 @@ export default function FamilyHistory() {
         ))}
       </div>
 
-      {/* Others and Relationship */}
-      <div className="flex gap-4 mb-2">
-        <input
-          className="flex-1 border border-gray-300 rounded px-2 py-1 text-black"
-          type="text"
-          placeholder="Others"
-          value={others}
-          onChange={(e) => setOthers(e.target.value)}
-        />
+     
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-2">
+        <div>
+          <label className="block text-sm font-medium mb-1 text-black">
+            Others
+          </label>
+          <input
+            className="w-full border border-gray-300 rounded px-2 py-1 text-black"
+            type="text"
+            placeholder="Others"
+            value={others}
+            onChange={(e) => setOthers(e.target.value)}
+          />
+        </div>
+
         <div className="flex-1">
           <label className="block text-sm font-medium mb-1 text-black">
             Relationship
@@ -341,7 +347,7 @@ export default function FamilyHistory() {
         </div>
       </div>
 
-      {/* Save Button */}
+    
       <div className="flex justify-end mt-4">
         <button
           onClick={handleSubmit}
@@ -354,48 +360,56 @@ export default function FamilyHistory() {
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
       {success && <p className="text-green-500 text-sm mb-4">{success}</p>}
 
-      {/* Table */}
-      <table className="w-full border mt-2">
-        <thead className="bg-gray-100 text-black">
-          <tr>
-            <th className="border px-2 py-1 text-left w-10 text-black">#</th>
-            <th className="border px-2 py-1 text-left text-black">
-              Relationship
-            </th>
-            <th className="border px-2 py-1 text-left text-black">
-              Family History
-            </th>
-            <th className="border px-2 py-1 text-left text-black">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {history.map((entry, index) => (
-            <tr key={entry._id}>
-              <td className="border px-2 py-1 text-black">{index + 1}</td>
-              <td className="border px-2 py-1 text-black">
-                {entry.relationship}
-              </td>
-              <td className="border px-2 py-1 text-black">
-                {entry.conditions.join(", ")}
-              </td>
-              <td className="border px-2 py-1 text-black">
+      
+      <Table
+        dataSource={history.map((entry, index) => ({
+          ...entry,
+          key: entry._id,
+          serialNumber: index + 1,
+        }))}
+        columns={[
+          {
+            title: "#",
+            dataIndex: "serialNumber",
+            key: "serialNumber",
+            width: 60,
+          },
+          {
+            title: "Relationship",
+            dataIndex: "relationship",
+            key: "relationship",
+          },
+          {
+            title: "Family History",
+            dataIndex: "conditions",
+            key: "conditions",
+            render: (conditions: string[]) => conditions.join(", "),
+          },
+          {
+            title: "Actions",
+            key: "actions",
+            render: (_, record) => (
+              <div className="flex gap-2">
                 <button
-                  onClick={() => handleEdit(entry)}
-                  className="px-2 py-1 bg-blue-600 text-white rounded-md mr-2"
+                  onClick={() => handleEdit(record)}
+                  className="px-2 py-1 bg-blue-600 text-white rounded"
                 >
                   Edit
                 </button>
                 <button
-                  onClick={() => handleDelete(entry._id)}
-                  className="px-2 py-1 bg-red-600 text-white rounded-md"
+                  onClick={() => handleDelete(record._id)}
+                  className="px-2 py-1 bg-red-600 text-white rounded"
                 >
                   Delete
                 </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </div>
+            ),
+          },
+        ]}
+        scroll={{ x: true }}
+        size="small"
+        className="mt-4"
+      />
     </div>
   );
 }

@@ -95,7 +95,7 @@ export default function LoginPage() {
                     type="email"
                     required
                     autoComplete="email"
-                    className="mt-1 w-full px-4 py-3 rounded-lg border border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1F2858] focus:border-transparent"
+                    className="mt-1 w-full px-4 py-3 rounded-lg border border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1F2858] focus:border-transparent text-black"
                     placeholder="Enter your email"
                   />
                 </div>

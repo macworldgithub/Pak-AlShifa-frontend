@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Select } from "antd";
+import { Select, Table } from "antd";
 import { BACKEND_URL } from "@/config";
 
 interface Visit {
@@ -129,7 +129,7 @@ export default function SocialHistory() {
     try {
       let response;
       if (editingId) {
-        // Update
+       
         response = await fetch(`${BACKEND_URL}/social-histories/${editingId}`, {
           method: "PUT",
           headers: {
@@ -139,7 +139,7 @@ export default function SocialHistory() {
           body: JSON.stringify(bodyData),
         });
       } else {
-        // Create
+       
         response = await fetch(`${BACKEND_URL}/social-histories`, {
           method: "POST",
           headers: {
@@ -214,7 +214,6 @@ export default function SocialHistory() {
         Social History
       </h2>
 
-      {/* Select Visit */}
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Select Visit
@@ -234,7 +233,7 @@ export default function SocialHistory() {
         </Select>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
         <div>
           <label className="block text-sm font-medium mb-1 text-black">
             Social Type
@@ -280,7 +279,7 @@ export default function SocialHistory() {
         </div>
       </div>
 
-      {/* Save Button */}
+    
       <div className="flex justify-end mt-4">
         <button
           onClick={handleSubmit}
@@ -293,50 +292,60 @@ export default function SocialHistory() {
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
       {success && <p className="text-green-500 text-sm mb-4">{success}</p>}
 
-      {/* Table */}
-      <table className="w-full border mt-2">
-        <thead className="bg-gray-100 text-black">
-          <tr>
-            <th className="border px-2 py-1 text-left w-10 text-black">#</th>
-            <th className="border px-2 py-1 text-left text-black">
-              Social Type
-            </th>
-            <th className="border px-2 py-1 text-left text-black">
-              Social Description
-            </th>
-            <th className="border px-2 py-1 text-left text-black">Quantity</th>
-            <th className="border px-2 py-1 text-left text-black">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {histories.map((entry, index) => (
-            <tr key={entry._id}>
-              <td className="border px-2 py-1 text-black">{index + 1}</td>
-              <td className="border px-2 py-1 text-black">
-                {entry.socialType}
-              </td>
-              <td className="border px-2 py-1 text-black">
-                {entry.socialDescription}
-              </td>
-              <td className="border px-2 py-1 text-black">{entry.quantity}</td>
-              <td className="border px-2 py-1 text-black">
+     
+      <Table
+        dataSource={histories.map((entry, index) => ({
+          ...entry,
+          key: entry._id,
+          serialNumber: index + 1,
+        }))}
+        columns={[
+          {
+            title: "#",
+            dataIndex: "serialNumber",
+            key: "serialNumber",
+            width: 60,
+          },
+          {
+            title: "Social Type",
+            dataIndex: "socialType",
+            key: "socialType",
+          },
+          {
+            title: "Social Description",
+            dataIndex: "socialDescription",
+            key: "socialDescription",
+          },
+          {
+            title: "Quantity",
+            dataIndex: "quantity",
+            key: "quantity",
+          },
+          {
+            title: "Actions",
+            key: "actions",
+            render: (_, record) => (
+              <div className="flex gap-2">
                 <button
-                  onClick={() => handleEdit(entry)}
-                  className="px-2 py-1 bg-blue-600 text-white rounded-md mr-2"
+                  onClick={() => handleEdit(record)}
+                  className="px-2 py-1 bg-blue-600 text-white rounded"
                 >
                   Edit
                 </button>
                 <button
-                  onClick={() => handleDelete(entry._id)}
-                  className="px-2 py-1 bg-red-600 text-white rounded-md"
+                  onClick={() => handleDelete(record._id)}
+                  className="px-2 py-1 bg-red-600 text-white rounded"
                 >
                   Delete
                 </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </div>
+            ),
+          },
+        ]}
+        scroll={{ x: true }}
+        size="small"
+        className="mt-4"
+      />
     </div>
   );
 }

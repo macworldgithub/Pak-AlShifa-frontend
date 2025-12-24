@@ -137,7 +137,7 @@ export default function PersonalAllergic() {
     try {
       let response;
       if (editingId) {
-        // Update
+       
         response = await fetch(`${BACKEND_URL}/allergies/${editingId}`, {
           method: "PUT",
           headers: {
@@ -147,7 +147,7 @@ export default function PersonalAllergic() {
           body: JSON.stringify(bodyData),
         });
       } else {
-        // Create
+       
         response = await fetch(`${BACKEND_URL}/allergies`, {
           method: "POST",
           headers: {
@@ -222,7 +222,7 @@ export default function PersonalAllergic() {
         Personal Allergic
       </h2>
 
-      {/* Select Visit */}
+   
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Select Visit
@@ -242,8 +242,8 @@ export default function PersonalAllergic() {
         </Select>
       </div>
 
-      <div className="flex gap-6">
-        {/* Left Box */}
+      <div className="flex flex-col lg:flex-row gap-6">
+    
         <div className="flex-1 border rounded-md bg-white p-4">
           <div className="mb-6">
             <label className="block text-sm font-medium mb-1 text-black">
@@ -273,7 +273,7 @@ export default function PersonalAllergic() {
             />
           </div>
         </div>
-        {/* Right Box */}
+       
         <div className="flex-1 border rounded-md bg-white p-4">
           <div className="mb-6">
             <label className="block text-sm font-medium mb-1 text-black">
@@ -290,7 +290,7 @@ export default function PersonalAllergic() {
               <option value="severe">Severe</option>
             </select>
           </div>
-          <div className="flex gap-2 items-end">
+          <div className="flex flex-col gap-2">
             <div className="flex-1">
               <label className="block text-sm font-medium mb-1 text-black">
                 Allergen Reaction
@@ -335,7 +335,7 @@ export default function PersonalAllergic() {
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
       {success && <p className="text-green-500 text-sm mb-4">{success}</p>}
 
-      {/* Save Button */}
+   
       <div className="flex justify-end mt-4">
         <button
           onClick={handleSubmit}
@@ -345,9 +345,11 @@ export default function PersonalAllergic() {
         </button>
       </div>
 
-      {/* Existing Allergies */}
+     
       <div className="mt-6">
-        <h3 className="text-lg font-semibold mb-4">Existing Allergies</h3>
+        <h3 className="text-lg font-semibold mb-4 text-black">
+          Existing Allergies
+        </h3>
         {allergies.map((allergy) => (
           <div
             key={allergy._id}

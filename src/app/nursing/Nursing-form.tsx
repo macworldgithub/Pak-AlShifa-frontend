@@ -82,11 +82,14 @@ export default function NursingForm() {
       }
 
       try {
-        const response = await fetch(`${BACKEND_URL}/nursing-assessments/visit/${value}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          `${BACKEND_URL}/nursing-assessments/visit/${value}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (response.ok) {
           const assessment = await response.json();
@@ -142,14 +145,17 @@ export default function NursingForm() {
       let response;
       if (assessmentId) {
         // Update
-        response = await fetch(`${BACKEND_URL}/nursing-assessments/${assessmentId}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(formData),
-        });
+        response = await fetch(
+          `${BACKEND_URL}/nursing-assessments/${assessmentId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(formData),
+          }
+        );
       } else {
         // Create
         response = await fetch(`${BACKEND_URL}/nursing-assessments`, {
@@ -163,10 +169,18 @@ export default function NursingForm() {
       }
 
       if (!response.ok) {
-        throw new Error(assessmentId ? "Failed to update assessment" : "Failed to create assessment");
+        throw new Error(
+          assessmentId
+            ? "Failed to update assessment"
+            : "Failed to create assessment"
+        );
       }
 
-      setSuccess(assessmentId ? "Assessment updated successfully." : "Assessment created successfully.");
+      setSuccess(
+        assessmentId
+          ? "Assessment updated successfully."
+          : "Assessment created successfully."
+      );
     } catch (err) {
       console.error(err);
       setError("Failed to save assessment. Please try again.");
@@ -175,11 +189,15 @@ export default function NursingForm() {
 
   return (
     <div className="bg-white p-4 rounded">
-      <h2 className="text-lg font-semibold mb-4">Nursing Assessment</h2>
+      <h2 className="text-lg font-semibold mb-4 text-black">
+        Nursing Assessment
+      </h2>
 
       {/* Select Visit */}
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-1">Select Visit</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Select Visit
+        </label>
         <Select
           value={visitId}
           onChange={handleVisitChange}
@@ -187,11 +205,11 @@ export default function NursingForm() {
           placeholder="Select a visit"
         >
           {visits.map((visit) => (
-  <Select.Option key={visit._id} value={visit._id}>
-    {visit.patient?.name}-{visit.doctorAssigned?.fullName}-
-    {visit.visitDate ? visit.visitDate.slice(0, 10) : "N/A"}
-  </Select.Option>
-))}
+            <Select.Option key={visit._id} value={visit._id}>
+              {visit.patient?.name}-{visit.doctorAssigned?.fullName}-
+              {visit.visitDate ? visit.visitDate.slice(0, 10) : "N/A"}
+            </Select.Option>
+          ))}
         </Select>
       </div>
 
