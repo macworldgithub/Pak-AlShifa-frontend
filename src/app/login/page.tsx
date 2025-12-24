@@ -105,7 +105,7 @@ export default function LoginPage() {
                 <div>
                   <label
                     htmlFor="password"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-black"
                   >
                     Password
                   </label>
@@ -115,7 +115,7 @@ export default function LoginPage() {
                     type="password"
                     required
                     autoComplete="current-password"
-                    className="mt-1 w-full px-4 py-3 rounded-lg border border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1F2858] focus:border-transparent"
+                    className=" text-black mt-1 w-full px-4 py-3 rounded-lg border border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1F2858] focus:border-transparent"
                     placeholder="Enter your password"
                   />
                 </div>
@@ -126,6 +126,7 @@ export default function LoginPage() {
                   {error}
                 </p>
               )}
+              
 
               <div className="flex items-center justify-between text-sm">
                 <label className="flex items-center">

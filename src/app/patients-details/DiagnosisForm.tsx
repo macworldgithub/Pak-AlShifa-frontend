@@ -154,6 +154,13 @@ export default function DiagnosisForm() {
     }
   };
 
+  const resetForm = () => {
+    setFormData({
+      narrativeDiagnosis: "",
+      finalDiagnosis: "",
+    });
+  };
+
   const handleSave = async () => {
     setError(null);
     setSuccess(null);
@@ -206,6 +213,7 @@ export default function DiagnosisForm() {
           ? "Diagnosis updated successfully."
           : "Diagnosis created successfully."
       );
+      resetForm();
     } catch (err) {
       console.error(err);
       setError("Failed to save diagnosis. Please try again.");

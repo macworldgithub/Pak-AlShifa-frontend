@@ -85,11 +85,14 @@ export default function ComplaintForm() {
       }
 
       try {
-        const response = await fetch(`${BACKEND_URL}/complaints/visit/${value}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          `${BACKEND_URL}/complaints/visit/${value}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (response.ok) {
           try {
@@ -100,7 +103,8 @@ export default function ComplaintForm() {
                 symptomsAndSigns: complaint.symptomsAndSigns || "",
                 surgicalHistory: complaint.surgicalHistory || "",
                 historyOfPastIllness: complaint.historyOfPastIllness || "",
-                historyOfPresentIllness: complaint.historyOfPresentIllness || "",
+                historyOfPresentIllness:
+                  complaint.historyOfPresentIllness || "",
                 progressNotes: complaint.progressNotes || "",
               });
               setComplaintId(complaint._id);
@@ -124,7 +128,17 @@ export default function ComplaintForm() {
       [name]: value,
     }));
   };
-
+  //reset
+  const resetForm = () => {
+    setFormData({
+      complaints: "",
+      symptomsAndSigns: "",
+      surgicalHistory: "",
+      historyOfPastIllness: "",
+      historyOfPresentIllness: "",
+      progressNotes: "",
+    });
+  };
   const handleSave = async () => {
     setError(null);
     setSuccess(null);
@@ -165,10 +179,20 @@ export default function ComplaintForm() {
       }
 
       if (!response.ok) {
-        throw new Error(complaintId ? "Failed to update complaint" : "Failed to create complaint");
+        throw new Error(
+          complaintId
+            ? "Failed to update complaint"
+            : "Failed to create complaint"
+        );
       }
 
-      setSuccess(complaintId ? "Complaint updated successfully." : "Complaint created successfully.");
+      // setSuccess(complaintId ? "Complaint updated successfully." : "Complaint created successfully.");
+      setSuccess(
+        complaintId
+          ? "Complaint updated successfully."
+          : "Complaint created successfully."
+      );
+      resetForm();
     } catch (err) {
       console.error(err);
       setError("Failed to save complaint. Please try again.");
@@ -183,7 +207,9 @@ export default function ComplaintForm() {
 
       {/* Select Visit */}
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">Select Visit</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Select Visit
+        </label>
         <Select
           value={visitId}
           onChange={handleVisitChange}
@@ -192,7 +218,8 @@ export default function ComplaintForm() {
         >
           {visits.map((visit) => (
             <Select.Option key={visit._id} value={visit._id}>
-              {visit.patient.name}-{visit.doctorAssigned.fullName}-{visit.visitDate.slice(0, 10)}
+              {visit.patient.name}-{visit.doctorAssigned.fullName}-
+              {visit.visitDate.slice(0, 10)}
             </Select.Option>
           ))}
         </Select>
