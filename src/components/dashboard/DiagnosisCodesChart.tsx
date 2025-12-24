@@ -57,7 +57,6 @@ import {
 } from "recharts";
 
 import { BACKEND_URL } from "@/config";
-
 interface DiagnosisData {
   code: string;
   value: number;
@@ -150,7 +149,7 @@ const DiagnosisCodesChart: React.FC = () => {
   const yDomainMax = Math.ceil(maxValue / 5) * 5;
 
   const chartHeight = isMobile ? 250 : 300;
-  const truncateLength = isMobile ? 15 : 30;
+  const truncateLength = isMobile ? 10 : 25;
 
   return (
     <div className="bg-white p-3 sm:p-4 md:p-6 rounded-lg shadow-sm border border-gray-200 mb-6">
