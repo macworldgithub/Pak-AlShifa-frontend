@@ -9,15 +9,15 @@ export default function PersonalAllergic() {
   const [onsetDate, setOnsetDate] = useState("2025-11-15");
 
   return (
-    <div className="flex gap-6">
+    <div className="flex flex-col gap-6 md:flex-row">
       {/* Left Box */}
-      <div className="flex-1 border rounded-md bg-white p-4">
+      <div className="w-full md:w-1/2 border rounded-md bg-white p-4 mb-4 md:mb-0">
         <div className="mb-6">
           <label className="block text-sm font-medium mb-1 text-black">
             Allergy Type
           </label>
           <select
-            className="w-full border border-red-400 rounded px-2 py-1 text-black"
+            className="w-full border border-gray-400 rounded px-2 py-1 text-black"
             value={allergyType}
             onChange={(e) => setAllergyType(e.target.value)}
           >
@@ -34,7 +34,7 @@ export default function PersonalAllergic() {
             Allergen Code
           </label>
           <input
-            className="w-full border border-red-400 rounded px-2 py-1 text-black"
+            className="w-full border border-gray-400 rounded px-2 py-1 text-black"
             type="text"
             placeholder="Search Allergen Code"
             value={allergenCode}
@@ -43,13 +43,13 @@ export default function PersonalAllergic() {
         </div>
       </div>
       {/* Right Box */}
-      <div className="flex-1 border rounded-md bg-white p-4">
+      <div className="w-full md:w-1/2 border rounded-md bg-white p-4">
         <div className="mb-6">
           <label className="block text-sm font-medium mb-1 text-black">
             Allergy Severity
           </label>
           <select
-            className="w-full border border-red-400 rounded px-2 py-1 text-black"
+            className="w-full border border-gray-400 rounded px-2 py-1 text-black"
             value={allergySeverity}
             onChange={(e) => setAllergySeverity(e.target.value)}
           >
@@ -59,13 +59,13 @@ export default function PersonalAllergic() {
             <option value="severe text-black">Severe</option>
           </select>
         </div>
-        <div className="flex gap-2 items-end">
-          <div className="flex-1">
+        <div className="flex flex-col gap-4">
+          <div>
             <label className="block text-sm font-medium mb-1 text-black">
               Allergen Reaction
             </label>
             <select
-              className="w-full border border-red-400 rounded px-2 py-1 text-black"
+              className="w-full border border-gray-400 rounded px-2 py-1 text-black"
               value={allergenReaction}
               onChange={(e) => setAllergenReaction(e.target.value)}
             >
@@ -80,7 +80,7 @@ export default function PersonalAllergic() {
               Onset Date
             </label>
             <input
-              className="border border-gray-400 rounded px-2 py-1 bg-gray-200 text-black"
+              className="w-full border border-gray-400 rounded px-2 py-1 bg-gray-200 text-black"
               type="date"
               value={onsetDate}
               onChange={(e) => setOnsetDate(e.target.value)}

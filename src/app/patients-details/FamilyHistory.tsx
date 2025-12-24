@@ -56,7 +56,7 @@ export default function FamilyHistory() {
   return (
     <div className="w-full">
       {/* Toggles */}
-      <div className="grid grid-cols-4 gap-x-6 gap-y-2 mb-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-2 mb-2">
         {familyOptions.map((option) => (
           <div key={option} className="flex items-center gap-2 text-black">
             <button
@@ -80,14 +80,20 @@ export default function FamilyHistory() {
       </div>
 
       {/* Others and Relationship */}
-      <div className="flex gap-4 mb-2">
-        <input
-          className="flex-1 border border-gray-300 rounded px-2 py-1 text-black"
-          type="text"
-          placeholder="Others"
-          value={others}
-          onChange={(e) => setOthers(e.target.value)}
-        />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-2">
+        <div>
+          <label className="block text-sm font-medium mb-1 text-black">
+            Others
+          </label>
+          <input
+            className="w-full border border-gray-300 rounded px-2 py-1 text-black"
+            type="text"
+            placeholder="Others"
+            value={others}
+            onChange={(e) => setOthers(e.target.value)}
+          />
+        </div>
+
         <div className="flex-1">
           <label className="block text-sm font-medium mb-1 text-black">
             Relationship
@@ -120,7 +126,7 @@ export default function FamilyHistory() {
             </th>
           </tr>
         </thead>
-        <tbody>{/* Example row, you can map rows here if needed */}</tbody>
+        <tbody></tbody>
       </table>
     </div>
   );

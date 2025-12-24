@@ -12,7 +12,7 @@ export default function SocialHistory() {
 
   return (
     <div className="w-full">
-      <div className="grid grid-cols-3 gap-4 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
         <div>
           <label className="block text-sm font-medium mb-1 text-black">
             Social Type
@@ -57,21 +57,28 @@ export default function SocialHistory() {
           </select>
         </div>
       </div>
-      <table className="w-full border mt-2">
-        <thead className="bg-gray-100 text-black">
-          <tr>
-            <th className="border px-2 py-1 text-left w-10 text-black">#</th>
-            <th className="border px-2 py-1 text-left text-black">
-              Social Type
-            </th>
-            <th className="border px-2 py-1 text-left text-black">
-              Social Description
-            </th>
-            <th className="border px-2 py-1 text-left text-black">Quantity</th>
-          </tr>
-        </thead>
-        <tbody>{/* Example row, you can map rows here if needed */}</tbody>
-      </table>
+      {/* Desktop Table View */}
+      <div>
+        <table className="w-full border mt-2">
+          <thead className="bg-gray-100 text-black">
+            <tr>
+              <th className="border px-2 py-1 text-left w-10 text-black">#</th>
+              <th className="border px-2 py-1 text-left text-black">
+                Social Type
+              </th>
+              <th className="border px-2 py-1 text-left text-black">
+                Social Description
+              </th>
+              <th className="border px-2 py-1 text-left text-black">
+                Quantity
+              </th>
+            </tr>
+          </thead>
+          <tbody>{/* Example row, you can map rows here if needed */}</tbody>
+        </table>
+      </div>
+
+      {/* Mobile Card View */}
     </div>
   );
 }
