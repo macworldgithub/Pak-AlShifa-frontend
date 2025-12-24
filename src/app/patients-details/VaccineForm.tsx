@@ -143,6 +143,19 @@ export default function VaccineForm() {
     }));
   };
 
+  const resetForm = () => {
+    setFormData({
+      vaccinationName: "",
+      dose: "",
+      expiryDate: "",
+      duration: "",
+      quantity: "",
+      unit: "",
+      description: "",
+      lotNumber: "",
+    });
+  };
+
   const handleSave = async () => {
     setError(null);
     setSuccess(null);
@@ -200,6 +213,7 @@ export default function VaccineForm() {
           ? "Vaccination updated successfully."
           : "Vaccination created successfully."
       );
+      resetForm();
     } catch (err) {
       console.error(err);
       setError("Failed to save vaccination. Please try again.");
