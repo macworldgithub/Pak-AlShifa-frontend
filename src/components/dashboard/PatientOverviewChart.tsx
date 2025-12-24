@@ -153,10 +153,10 @@ const PatientOverviewChart: React.FC = () => {
 
       <div className="flex items-center gap-3 mt-1 mb-4">
         <h2 className="text-4xl font-bold text-gray-900">{totalPatients}</h2>
-        <div className="flex items-center text-green-600 text-sm font-medium">
+        {/* <div className="flex items-center text-green-600 text-sm font-medium">
           <FaArrowUp className="mr-1" />
           {increase}
-        </div>
+        </div> */}
       </div>
 
       <div className="w-full h-[330px]">
