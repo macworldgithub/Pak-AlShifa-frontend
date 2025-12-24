@@ -65,7 +65,7 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
       {/* Right */}
       <div className="flex items-center space-x-4">
         {/* Search */}
-        <div className="relative w-64 hidden sm:block">
+        {/* <div className="relative w-64 hidden sm:block">
           <input
             type="text"
             placeholder="Search"
@@ -74,7 +74,7 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
             className="w-full pl-10 pr-4 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none text-black"
           />
           <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-        </div>
+        </div> */}
 
         {/* User Dropdown */}
         <div ref={dropdownRef} className="relative">

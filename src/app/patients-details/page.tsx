@@ -15,7 +15,7 @@ import NotesForm from "./NotesForm";
 import PatientFilesForm from "./PatientFilesForm";
 import DischargeForm from "./DischargeForm";
 import ECGForm from "./ECGForm";
-import Data from "./Data";
+import Data from "../patients-list/Data";
 import PersonalAllergic from "./PersonalAllergic";
 import SocialHistory from "./SocialHistory";
 import FamilyHistory from "./FamilyHistory";
@@ -71,9 +71,9 @@ export default function Shifa3() {
               formData={formData}
               handleInputChange={handleInputChange}
             />
-            <div className="mt-8">
+            {/* <div className="mt-8">
               <Data />
-            </div>
+            </div> */}
           </>
         );
       case "Nursing":
