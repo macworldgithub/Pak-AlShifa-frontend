@@ -1,9 +1,8 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import user from "../../../public/images/user.png";
-import { FaSearch, FaBell } from "react-icons/fa";
 import toggle from "../../../public/images/toggle.png";
+import { FaSearch } from "react-icons/fa";
 
 interface NavbarProps {
   onToggleSidebar: () => void;
@@ -14,7 +13,17 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown when clicking outside
+  // Read user data from localStorage
+  const userFullName =
+    typeof window !== "undefined"
+      ? localStorage.getItem("user_fullName") || "User"
+      : "User";
+
+  const userRole =
+    typeof window !== "undefined"
+      ? localStorage.getItem("user_role") || "Role"
+      : "Role";
+
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -24,10 +33,14 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
         setIsDropdownOpen(false);
       }
     }
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const handleLogout = () => {
+    localStorage.clear(); // Ya sirf token/role remove karein
+    window.location.href = "/login"; // Hard redirect for clean logout
+  };
 
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200 px-6 py-1 flex items-center justify-between">
@@ -58,15 +71,10 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
             placeholder="Search"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none"
+            className="w-full pl-10 pr-4 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none text-black"
           />
           <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
         </div>
-
-        {/* Bell */}
-        <button className="p-2 rounded-lg bg-gray-100 text-gray-500 hover:text-gray-700">
-          <FaBell size={20} />
-        </button>
 
         {/* User Dropdown */}
         <div ref={dropdownRef} className="relative">
@@ -74,25 +82,29 @@ export default function Navbar({ onToggleSidebar }: NavbarProps) {
             onClick={() => setIsDropdownOpen((prev) => !prev)}
             className="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100"
           >
-            <Image
-              src={user}
-              alt="Danny Bates"
-              width={30}
-              height={30}
-              className="rounded-full"
-            />
-            <span className="hidden md:block text-sm font-medium text-gray-700">
-              Danny Bates
+            <span className="block text-sm font-medium text-gray-700">
+              {userFullName}
             </span>
-            <span className="hidden md:block text-gray-500">▼</span>
+            <span className="block text-gray-500">▼</span>
           </button>
 
           {/* Dropdown Menu */}
           {isDropdownOpen && (
-            <div className="absolute right-0 mt-2 bg-white shadow-lg rounded-lg p-3 z-50 min-w-[160px]">
-              <p className="text-sm font-medium text-gray-700">Danny Bates</p>
-              <p className="text-xs text-gray-500 mb-2">Admin</p>
-              <button className="block w-full text-left px-3 py-1 text-red-600 hover:bg-red-50 rounded text-sm">
+            <div className="absolute right-0 mt-2 bg-white shadow-lg rounded-lg p-4 z-50 min-w-[180px] border">
+              <div className="text-center mb-3">
+                {/* <div className="w-16 h-16 bg-gray-300 rounded-full mx-auto mb-2 flex items-center justify-center text-white font-bold text-xl">
+                  {userFullName.charAt(0).toUpperCase()}
+                </div> */}
+                <p className="text-sm font-semibold text-gray-800">
+                  {userFullName}
+                </p>
+                <p className="text-xs text-gray-500">Role: {userRole}</p>
+              </div>
+              <hr className="my-2" />
+              <button
+                onClick={handleLogout}
+                className="block w-full text-left px-3 py-2 text-red-600 hover:bg-red-50 rounded text-sm font-medium"
+              >
                 Logout
               </button>
             </div>
