@@ -87,9 +87,7 @@ export default function Tabs({
               }`}
             >
               {tab}
-              {disabled && (
-                <span className="ml-1 text-xs opacity-70">(Restricted)</span>
-              )}
+              {disabled && <span className="ml-1 text-xs opacity-70"></span>}
             </button>
           );
         })}

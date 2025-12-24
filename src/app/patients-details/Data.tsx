@@ -1,91 +1,31 @@
 "use client";
 
-import React from "react";
-import { Table, Input, DatePicker, Avatar, Tag, Space } from "antd";
+import React, { useEffect, useState, useCallback } from "react";
+import { Table, Input, DatePicker, Avatar, Space, Spin, Alert } from "antd";
 import { SearchOutlined, CalendarOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
+import dayjs from "dayjs";
 
-interface PatientData {
+interface PatientTableData {
   key: string;
   name: string;
-  age: number;
-  date: string;
-  time: string;
-  doctor: string;
-  treatment: string;
-  status: string;
-  statusColor: string;
+  age: number | null;
+  email: string;
+  remark: string;
+  createdAt: string;
 }
 
-const data: PatientData[] = [
-  {
-    key: "1",
-    name: "James Andrew",
-    age: 45,
-    date: "February 29, 2024",
-    time: "10:00 AM",
-    doctor: "Dr. Emily Stanton",
-    treatment: "Hypertension",
-    status: "Confirmed",
-    statusColor: "green",
-  },
-  {
-    key: "2",
-    name: "Maria Smith",
-    age: 32,
-    date: "March 5, 2024",
-    time: "02:30 PM",
-    doctor: "Dr. Aaron Cheung",
-    treatment: "Type 2 Diabetes Mellitus",
-    status: "Pending Lab Results",
-    statusColor: "orange",
-  },
-  {
-    key: "3",
-    name: "Sarah Lee",
-    age: 52,
-    date: "March 10, 2024",
-    time: "11:45 AM",
-    doctor: "Dr. Michael Kim",
-    treatment: "Osteoarthritis",
-    status: "Awaiting Surgery Date",
-    statusColor: "volcano",
-  },
-  {
-    key: "4",
-    name: "David Wilson",
-    age: 47,
-    date: "March 15, 2024",
-    time: "01:00 PM",
-    doctor: "Dr. Laura Jones",
-    treatment: "Coronary Artery Disease",
-    status: "Post-Operative Check",
-    statusColor: "red",
-  },
-  {
-    key: "5",
-    name: "Christopher",
-    age: 38,
-    date: "March 22, 2024",
-    time: "08:30 AM",
-    doctor: "Dr. Nora Fitzgerald",
-    treatment: "Depression",
-    status: "Follow-up",
-    statusColor: "blue",
-  },
-];
-
-const columns: ColumnsType<PatientData> = [
+const columns: ColumnsType<PatientTableData> = [
   {
     title: "Name",
     dataIndex: "name",
     key: "name",
-    render: (_, record) => (
+    render: (name: string) => (
       <Space>
         <Avatar className="bg-gray-400 text-white font-semibold">
-          {record.name.charAt(0)}
+          {name?.charAt(0).toUpperCase() || "N"}
         </Avatar>
-        <span className="font-medium text-gray-800">{record.name}</span>
+        <span className="font-medium text-gray-800">{name || "N/A"}</span>
       </Space>
     ),
   },
@@ -95,95 +35,195 @@ const columns: ColumnsType<PatientData> = [
     key: "age",
     align: "center" as const,
     width: 80,
+    render: (age: number | null) => (age !== null ? age : "-"),
   },
   {
     title: "Date",
-    key: "date",
+    key: "createdAt",
+    width: 160,
     render: (_, record) => (
       <div className="text-sm">
-        <div className="font-medium">{record.date}</div>
-        <div className="text-gray-500">{record.time}</div>
+        <div className="font-medium">
+          {dayjs(record.createdAt).format("MMMM DD, YYYY")}
+        </div>
+        <div className="text-gray-500">
+          {dayjs(record.createdAt).format("hh:mm A")}
+        </div>
       </div>
     ),
   },
   {
-    title: "Doctor",
-    dataIndex: "doctor",
-    key: "doctor",
+    title: "Email",
+    dataIndex: "email",
+    key: "email",
+    width: 220,
+    render: (email: string) => email || "-",
   },
   {
-    title: "Treatment",
-    dataIndex: "treatment",
-    key: "treatment",
-  },
-  {
-    title: "Status",
-    key: "status",
-    render: (_, record) => (
-      <Tag
-        color={record.statusColor}
-        className="px-3 py-1 text-xs font-medium rounded-full border-0"
-      >
-        {record.status}
-      </Tag>
-    ),
-    align: "center" as const,
+    title: "Remark",
+    dataIndex: "remark",
+    key: "remark",
+    width: 200,
+    ellipsis: true,
+    render: (remark: string) => remark || "-",
   },
 ];
 
 export default function PatientDataTable() {
+  const [patients, setPatients] = useState<PatientTableData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Filter states
+  const [searchText, setSearchText] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
+
+  // Fetch function with filters
+  const fetchPatients = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        setError("No authentication token found. Please log in.");
+        setLoading(false);
+        return;
+      }
+
+      // Build query params
+      const params = new URLSearchParams();
+      if (searchText.trim()) {
+        params.append("search", searchText.trim());
+      }
+      if (selectedDate) {
+        params.append("date", selectedDate.format("YYYY-MM-DD"));
+      }
+
+      const url = `http://localhost:7008/patients${
+        params.toString() ? `?${params.toString()}` : ""
+      }`;
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          accept: "*/*",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      const formattedPatients: PatientTableData[] = data.map(
+        (patient: any) => ({
+          key: patient._id,
+          name: patient.name || "N/A",
+          age: patient.age,
+          email: patient.email || "",
+          remark: patient.remark || "",
+          createdAt: patient.createdAt,
+        })
+      );
+
+      setPatients(formattedPatients);
+    } catch (err: any) {
+      setError(err.message || "Failed to fetch patients");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [searchText, selectedDate]);
+
+  // Initial load + re-fetch on filter change
+  useEffect(() => {
+    fetchPatients();
+  }, [fetchPatients]);
+
+  // Handle search input change (with debounce feel)
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
+  };
+
+  // Handle date change
+  const handleDateChange = (date: dayjs.Dayjs | null) => {
+    setSelectedDate(date);
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      {/* Header */}
+      {/* Header with Filters */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
         <h2 className="text-xl font-semibold text-gray-800">Patient Data</h2>
 
-        <div className="flex items-center gap-3">
-          {/* Search */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          {/* Search Input */}
           <Input
-            placeholder="Search"
+            placeholder="Search by name..."
             prefix={<SearchOutlined className="text-gray-400" />}
-            className="w-64 h-10 rounded-lg border-gray-300"
+            className="w-full sm:w-64 h-10 rounded-lg border-gray-300"
             allowClear
+            value={searchText}
+            onChange={handleSearch}
           />
 
           {/* Date Picker */}
           <DatePicker
+            placeholder="Filter by date"
             suffixIcon={<CalendarOutlined className="text-gray-500" />}
-            placeholder="Choose Date"
-            className="w-48 h-10 rounded-lg border-gray-300"
+            className="w-full sm:w-48 h-10 rounded-lg border-gray-300"
+            value={selectedDate}
+            onChange={handleDateChange}
+            format="YYYY-MM-DD"
           />
-
-          <button className="text-gray-500 hover:text-gray-700">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-              />
-            </svg>
-          </button>
         </div>
       </div>
 
-      {/* Responsive Table Wrapper */}
-      <div className="w-full overflow-x-auto">
-        <Table
-          columns={columns}
-          dataSource={data}
-          pagination={false}
-          className="ant-table-custom min-w-max"
-          rowClassName="hover:bg-gray-50 transition-colors"
-          bordered={false}
+      {/* Loading */}
+      {loading && (
+        <div className="flex justify-center items-center py-12">
+          <Spin size="large" tip="Loading patients..." />
+        </div>
+      )}
+
+      {/* Error */}
+      {error && (
+        <Alert
+          message="Error"
+          description={error}
+          type="error"
+          showIcon
+          className="mb-6"
         />
-      </div>
+      )}
+
+      {/* Table with Horizontal Scroll */}
+
+      {!loading && !error && patients.length === 0 && (
+        <div className="text-center py-12 text-gray-500">
+          <p className="text-lg">No patients found for the selected filters.</p>
+          <p className="text-sm mt-2">Try changing the search term or date.</p>
+        </div>
+      )}
+
+      {!loading && !error && patients.length > 0 && (
+        <div className="w-full overflow-x-auto border border-gray-200 rounded-lg">
+          <div className="min-w-[800px]">
+            <Table
+              columns={columns}
+              dataSource={patients}
+              pagination={{ pageSize: 10 }}
+              locale={{ emptyText: "No patients found" }} // Yeh bhi help karega
+              rowClassName="hover:bg-gray-50 transition-colors"
+              bordered={false}
+              // scroll={{ x: "max-content" }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
