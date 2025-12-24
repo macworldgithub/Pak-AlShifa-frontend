@@ -123,26 +123,34 @@ export default function DiagnosisForm() {
       return;
     }
 
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      setError("Please login first.");
+      return;
+    }
+
     try {
       const response = await fetch(
-        `https://clinicaltables.nlm.nih.gov/api/conditions/v3/search?terms=${encodeURIComponent(
-          value
-        )}&maxList=500`
+        `${BACKEND_URL}/diagnoses/diseases?search=${encodeURIComponent(value)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (!response.ok) {
-        throw new Error("Failed to fetch diagnoses");
+        throw new Error("Failed to fetch diseases");
       }
 
       const data = await response.json();
-      const names = data[3] || []; // 4th element is array of arrays with names
-      const options = names.map((nameArr: string[]) => ({
-        value: nameArr[0],
-        label: nameArr[0],
+      const options = data.map((d: { code: string; name: string }) => ({
+        value: d.name,
+        label: d.name,
       }));
       setDiagnosisOptions(options);
     } catch (err) {
       console.error(err);
-      setError("Failed to search diagnoses.");
+      setError("Failed to search diseases.");
     }
   };
 
