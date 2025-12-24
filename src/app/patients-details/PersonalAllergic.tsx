@@ -137,7 +137,6 @@ export default function PersonalAllergic() {
     try {
       let response;
       if (editingId) {
-       
         response = await fetch(`${BACKEND_URL}/allergies/${editingId}`, {
           method: "PUT",
           headers: {
@@ -147,7 +146,6 @@ export default function PersonalAllergic() {
           body: JSON.stringify(bodyData),
         });
       } else {
-       
         response = await fetch(`${BACKEND_URL}/allergies`, {
           method: "POST",
           headers: {
@@ -222,7 +220,6 @@ export default function PersonalAllergic() {
         Personal Allergic
       </h2>
 
-   
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Select Visit
@@ -243,14 +240,13 @@ export default function PersonalAllergic() {
       </div>
 
       <div className="flex flex-col lg:flex-row gap-6">
-    
         <div className="flex-1 border rounded-md bg-white p-4">
           <div className="mb-6">
             <label className="block text-sm font-medium mb-1 text-black">
               Allergy Type
             </label>
             <select
-              className="w-full border border-red-400 rounded px-2 py-1 text-black"
+              className="w-full border border-gray-400 rounded px-2 py-1 text-black"
               value={allergyType}
               onChange={(e) => setAllergyType(e.target.value)}
             >
@@ -265,7 +261,7 @@ export default function PersonalAllergic() {
               Allergen Code
             </label>
             <input
-              className="w-full border border-red-400 rounded px-2 py-1 text-black"
+              className="w-full border border-gray-400 rounded px-2 py-1 text-black"
               type="text"
               placeholder="Search Allergen Code"
               value={allergenCode}
@@ -273,14 +269,14 @@ export default function PersonalAllergic() {
             />
           </div>
         </div>
-       
+
         <div className="flex-1 border rounded-md bg-white p-4">
           <div className="mb-6">
             <label className="block text-sm font-medium mb-1 text-black">
               Allergy Severity
             </label>
             <select
-              className="w-full border border-red-400 rounded px-2 py-1 text-black"
+              className="w-full border border-gray-400 rounded px-2 py-1 text-black"
               value={allergySeverity}
               onChange={(e) => setAllergySeverity(e.target.value)}
             >
@@ -296,7 +292,7 @@ export default function PersonalAllergic() {
                 Allergen Reaction
               </label>
               <select
-                className="w-full border border-red-400 rounded px-2 py-1 text-black"
+                className="w-full border border-gray-400 rounded px-2 py-1 text-black"
                 value={allergenReaction}
                 onChange={(e) => setAllergenReaction(e.target.value)}
               >
@@ -335,7 +331,6 @@ export default function PersonalAllergic() {
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
       {success && <p className="text-green-500 text-sm mb-4">{success}</p>}
 
-   
       <div className="flex justify-end mt-4">
         <button
           onClick={handleSubmit}
@@ -345,7 +340,6 @@ export default function PersonalAllergic() {
         </button>
       </div>
 
-     
       <div className="mt-6">
         <h3 className="text-lg font-semibold mb-4 text-black">
           Existing Allergies
@@ -372,7 +366,7 @@ export default function PersonalAllergic() {
             </p>
             <button
               onClick={() => handleEdit(allergy)}
-              className="mt-2 px-4 py-1 bg-blue-600 text-white rounded-md mr-2"
+              className="mt-2 px-4 py-1 bg-[#202858]  text-white rounded-md mr-2"
             >
               Edit
             </button>

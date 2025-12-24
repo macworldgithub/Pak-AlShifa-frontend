@@ -141,7 +141,6 @@ export default function FamilyHistory() {
     }
   };
 
- 
   const handleToggle = (option: string) => {
     setSelectedConditions((prev) => ({ ...prev, [option]: !prev[option] }));
   };
@@ -181,7 +180,6 @@ export default function FamilyHistory() {
     try {
       let response;
       if (editingId) {
-       
         response = await fetch(`${BACKEND_URL}/family-histories/${editingId}`, {
           method: "PUT",
           headers: {
@@ -191,7 +189,6 @@ export default function FamilyHistory() {
           body: JSON.stringify(bodyData),
         });
       } else {
-      
         response = await fetch(`${BACKEND_URL}/family-histories`, {
           method: "POST",
           headers: {
@@ -271,7 +268,6 @@ export default function FamilyHistory() {
 
   return (
     <div className="w-full">
-   
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Select Visit
@@ -290,7 +286,6 @@ export default function FamilyHistory() {
           ))}
         </Select>
       </div>
-
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-2 mb-2">
         {familyOptions.map((option) => (
@@ -313,7 +308,6 @@ export default function FamilyHistory() {
         ))}
       </div>
 
-     
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-2">
         <div>
           <label className="block text-sm font-medium mb-1 text-black">
@@ -347,7 +341,6 @@ export default function FamilyHistory() {
         </div>
       </div>
 
-    
       <div className="flex justify-end mt-4">
         <button
           onClick={handleSubmit}
@@ -360,7 +353,6 @@ export default function FamilyHistory() {
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
       {success && <p className="text-green-500 text-sm mb-4">{success}</p>}
 
-      
       <Table
         dataSource={history.map((entry, index) => ({
           ...entry,
@@ -392,7 +384,7 @@ export default function FamilyHistory() {
               <div className="flex gap-2">
                 <button
                   onClick={() => handleEdit(record)}
-                  className="px-2 py-1 bg-blue-600 text-white rounded"
+                  className="px-2 py-1 bg-[#202858]  text-white rounded"
                 >
                   Edit
                 </button>
