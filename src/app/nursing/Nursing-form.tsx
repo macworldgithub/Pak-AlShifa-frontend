@@ -125,6 +125,20 @@ export default function NursingForm() {
     }));
   };
 
+  const resetForm = () => {
+    setFormData({
+      bpsBpd: "",
+      pulse: "",
+      resp: "",
+      height: "",
+      weight: "",
+      bmi: "",
+      temp: "",
+      grbs: "",
+      remarks: "",
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -181,6 +195,7 @@ export default function NursingForm() {
           ? "Assessment updated successfully."
           : "Assessment created successfully."
       );
+      resetForm();
     } catch (err) {
       console.error(err);
       setError("Failed to save assessment. Please try again.");
@@ -350,7 +365,7 @@ export default function NursingForm() {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="px-4 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="px-6 py-2 border border-gray-300 text-black rounded-md cursor-pointer focus:outline-none"
           >
             Save
           </button>
