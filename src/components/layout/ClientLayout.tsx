@@ -99,7 +99,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
       {/* Overlay – between content and sidebar */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-[45] md:hidden" // z between content and sidebar
+          className="fixed inset-0 bg-black/50 z-45 md:hidden" // z between content and sidebar
           onClick={() => setIsSidebarOpen(false)}
         />
       )}

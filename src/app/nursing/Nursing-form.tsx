@@ -207,7 +207,7 @@ export default function NursingForm() {
           {visits.map((visit) => (
             <Select.Option key={visit._id} value={visit._id}>
               {visit.patient.name}-{visit.doctorAssigned.fullName}-
-              {visit.visitDate.slice(0, 10)}
+              {visit.visitDate?.slice(0, 10) || "No date"}
             </Select.Option>
           ))}
         </Select>

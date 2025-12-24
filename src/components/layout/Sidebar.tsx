@@ -42,7 +42,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
       className={`
       fixed left-0 top-0 h-full bg-white shadow-md flex flex-col transition-all duration-300 ease-in-out z-50
       w-20 p-3  // Default narrow (icons-only) on mobile
-      md:w-[240px] md:p-6  // Full width on desktop/tablet
+       md:w-60 md:p-6  // Full width on desktop/tablet
       transform -translate-x-full md:translate-x-0  // Hidden on mobile
       ${isOpen ? "translate-x-0" : ""}  // Slide in when open on mobile
     `}
