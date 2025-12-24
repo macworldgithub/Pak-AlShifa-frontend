@@ -129,7 +129,6 @@ export default function SocialHistory() {
     try {
       let response;
       if (editingId) {
-       
         response = await fetch(`${BACKEND_URL}/social-histories/${editingId}`, {
           method: "PUT",
           headers: {
@@ -139,7 +138,6 @@ export default function SocialHistory() {
           body: JSON.stringify(bodyData),
         });
       } else {
-       
         response = await fetch(`${BACKEND_URL}/social-histories`, {
           method: "POST",
           headers: {
@@ -279,7 +277,6 @@ export default function SocialHistory() {
         </div>
       </div>
 
-    
       <div className="flex justify-end mt-4">
         <button
           onClick={handleSubmit}
@@ -292,7 +289,6 @@ export default function SocialHistory() {
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
       {success && <p className="text-green-500 text-sm mb-4">{success}</p>}
 
-     
       <Table
         dataSource={histories.map((entry, index) => ({
           ...entry,
@@ -328,7 +324,7 @@ export default function SocialHistory() {
               <div className="flex gap-2">
                 <button
                   onClick={() => handleEdit(record)}
-                  className="px-2 py-1 bg-blue-600 text-white rounded"
+                  className="px-2 py-1 bg-[#202858]  text-white rounded"
                 >
                   Edit
                 </button>
