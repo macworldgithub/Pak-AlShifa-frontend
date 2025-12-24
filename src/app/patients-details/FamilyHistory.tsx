@@ -1,5 +1,8 @@
 "use client";
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
+import { Select } from "antd";
+import { BACKEND_URL } from "@/config";
 
 const familyOptions = [
   "None",
@@ -40,21 +43,254 @@ const relationships = [
   "Other",
 ];
 
+interface Visit {
+  _id: string;
+  visitDate: string;
+  patient: { name: string };
+  doctorAssigned: { fullName: string };
+}
+
+interface FamilyHistoryEntry {
+  _id: string;
+  relationship: string;
+  conditions: string[];
+}
+
 export default function FamilyHistory() {
-  const [selected, setSelected] = useState({});
+  const [selectedConditions, setSelectedConditions] = useState<{
+    [key: string]: boolean;
+  }>({});
   const [relationship, setRelationship] = useState("");
   const [others, setOthers] = useState("");
-  const [rows, setRows] = useState([]);
+  const [visits, setVisits] = useState<Visit[]>([]);
+  const [visitId, setVisitId] = useState<string>("");
+  const [history, setHistory] = useState<FamilyHistoryEntry[]>([]);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchVisits();
+  }, []);
+
+  const fetchVisits = async () => {
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      setError("Please login first.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${BACKEND_URL}/visits`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch visits");
+      }
+
+      const data: Visit[] = await response.json();
+      setVisits(data);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to fetch visits. Please try again.");
+    }
+  };
+
+  const fetchHistory = async (visitId: string) => {
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      setError("Please login first.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${BACKEND_URL}/family-histories/visit/${visitId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch family history");
+      }
+
+      const data: FamilyHistoryEntry[] = await response.json();
+      setHistory(data);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to fetch family history.");
+    }
+  };
+
+  const handleVisitChange = async (value: string) => {
+    setVisitId(value);
+    setEditingId(null);
+    setSelectedConditions({});
+    setRelationship("");
+    setOthers("");
+    setHistory([]);
+
+    if (value) {
+      fetchHistory(value);
+    }
+  };
 
   // Toggle handler
+  const handleToggle = (option: string) => {
+    setSelectedConditions((prev) => ({ ...prev, [option]: !prev[option] }));
+  };
 
-  const handleToggle = (option: any) => {
-    //@ts-ignore
-    setSelected((prev) => ({ ...prev, [option]: !prev[option] }));
+  const handleSubmit = async () => {
+    setError(null);
+    setSuccess(null);
+
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      setError("Please login first.");
+      return;
+    }
+
+    if (!visitId) {
+      setError("Please select a visit.");
+      return;
+    }
+
+    const conditions = Object.keys(selectedConditions).filter(
+      (key) => selectedConditions[key]
+    );
+    if (others) {
+      conditions.push(others);
+    }
+
+    if (conditions.length === 0 || !relationship) {
+      setError("Please select at least one condition and relationship.");
+      return;
+    }
+
+    const bodyData = {
+      relationship,
+      conditions,
+    };
+
+    try {
+      let response;
+      if (editingId) {
+        // Update
+        response = await fetch(`${BACKEND_URL}/family-histories/${editingId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(bodyData),
+        });
+      } else {
+        // Create
+        response = await fetch(`${BACKEND_URL}/family-histories`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ ...bodyData, visit: visitId }),
+        });
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          editingId
+            ? "Failed to update family history"
+            : "Failed to create family history"
+        );
+      }
+
+      setSuccess(
+        editingId
+          ? "Family history updated successfully."
+          : "Family history created successfully."
+      );
+      setSelectedConditions({});
+      setRelationship("");
+      setOthers("");
+      setEditingId(null);
+      fetchHistory(visitId);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to save family history. Please try again.");
+    }
+  };
+
+  const handleEdit = (entry: FamilyHistoryEntry) => {
+    setRelationship(entry.relationship);
+    let selected: { [key: string]: boolean } = {};
+    entry.conditions.forEach((cond: string) => {
+      if (familyOptions.includes(cond)) {
+        selected[cond] = true;
+      } else {
+        setOthers(cond);
+      }
+    });
+    setSelectedConditions(selected);
+    setEditingId(entry._id);
+  };
+
+  const handleDelete = async (id: string) => {
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      setError("Please login first.");
+      return;
+    }
+
+    if (confirm("Are you sure you want to delete this family history entry?")) {
+      try {
+        const response = await fetch(`${BACKEND_URL}/family-histories/${id}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to delete family history");
+        }
+
+        setSuccess("Family history deleted successfully.");
+        fetchHistory(visitId);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to delete family history.");
+      }
+    }
   };
 
   return (
     <div className="w-full">
+      {/* Select Visit */}
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Select Visit
+        </label>
+        <Select
+          value={visitId}
+          onChange={handleVisitChange}
+          className="w-full"
+          placeholder="Select a visit"
+        >
+          {visits.map((visit) => (
+            <Select.Option key={visit._id} value={visit._id}>
+              {visit.patient.name}-{visit.doctorAssigned.fullName}-
+              {visit.visitDate.slice(0, 10)}
+            </Select.Option>
+          ))}
+        </Select>
+      </div>
+
       {/* Toggles */}
       <div className="grid grid-cols-4 gap-x-6 gap-y-2 mb-2">
         {familyOptions.map((option) => (
@@ -62,15 +298,13 @@ export default function FamilyHistory() {
             <button
               type="button"
               onClick={() => handleToggle(option)}
-              className={`w-10 h-6 rounded-full flex items-center px-1 transition-colors duration-200 text-black  ${
-                //@ts-ignore
-                selected[option] ? "bg-red-600" : "bg-gray-300"
+              className={`w-10 h-6 rounded-full flex items-center px-1 transition-colors duration-200 text-black ${
+                selectedConditions[option] ? "bg-red-600" : "bg-gray-300"
               }`}
             >
               <span
                 className={`inline-block w-4 h-4 rounded-full bg-white shadow transform transition-transform duration-200 text-black ${
-                  //@ts-ignore
-                  selected[option] ? "translate-x-4" : ""
+                  selectedConditions[option] ? "translate-x-4" : ""
                 }`}
               />
             </button>
@@ -97,7 +331,7 @@ export default function FamilyHistory() {
             value={relationship}
             onChange={(e) => setRelationship(e.target.value)}
           >
-            <option value="text-black">--Select Relationship--</option>
+            <option value="">--Select Relationship--</option>
             {relationships.map((r) => (
               <option key={r} value={r}>
                 {r}
@@ -106,6 +340,19 @@ export default function FamilyHistory() {
           </select>
         </div>
       </div>
+
+      {/* Save Button */}
+      <div className="flex justify-end mt-4">
+        <button
+          onClick={handleSubmit}
+          className="px-6 py-2 border border-gray-300 text-black rounded-md cursor-pointer focus:outline-none"
+        >
+          Save
+        </button>
+      </div>
+
+      {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+      {success && <p className="text-green-500 text-sm mb-4">{success}</p>}
 
       {/* Table */}
       <table className="w-full border mt-2">
@@ -118,9 +365,36 @@ export default function FamilyHistory() {
             <th className="border px-2 py-1 text-left text-black">
               Family History
             </th>
+            <th className="border px-2 py-1 text-left text-black">Actions</th>
           </tr>
         </thead>
-        <tbody>{/* Example row, you can map rows here if needed */}</tbody>
+        <tbody>
+          {history.map((entry, index) => (
+            <tr key={entry._id}>
+              <td className="border px-2 py-1 text-black">{index + 1}</td>
+              <td className="border px-2 py-1 text-black">
+                {entry.relationship}
+              </td>
+              <td className="border px-2 py-1 text-black">
+                {entry.conditions.join(", ")}
+              </td>
+              <td className="border px-2 py-1 text-black">
+                <button
+                  onClick={() => handleEdit(entry)}
+                  className="px-2 py-1 bg-blue-600 text-white rounded-md mr-2"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(entry._id)}
+                  className="px-2 py-1 bg-red-600 text-white rounded-md"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
       </table>
     </div>
   );
