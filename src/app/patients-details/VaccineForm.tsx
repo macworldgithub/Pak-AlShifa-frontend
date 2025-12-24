@@ -225,8 +225,8 @@ export default function VaccineForm() {
         >
           {visits.map((visit) => (
             <Select.Option key={visit._id} value={visit._id}>
-              {visit.patient.name}-{visit.doctorAssigned.fullName}-
-              {visit.visitDate.slice(0, 10)}
+              {visit.patient?.name}-{visit.doctorAssigned?.fullName}-
+              {visit.visitDate ? visit.visitDate.slice(0, 10) : "N/A"}
             </Select.Option>
           ))}
         </Select>
