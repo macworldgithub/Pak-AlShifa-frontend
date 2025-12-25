@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import Tabs from "../patients-details/Tabs";
 import NursingForm from "./Nursing-form";
