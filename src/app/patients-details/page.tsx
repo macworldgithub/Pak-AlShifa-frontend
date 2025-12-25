@@ -130,7 +130,6 @@
 
 // src/app/patients-details/page.tsx
 "use client";
-
 import { useState } from "react";
 import Tabs from "./Tabs";
 import PatientForm from "./Form";
@@ -149,14 +148,13 @@ import Data from "./Data";
 import PersonalAllergic from "./PersonalAllergic";
 import SocialHistory from "./SocialHistory";
 import FamilyHistory from "./FamilyHistory";
-
 export default function Shifa3() {
   const [activeTab, setActiveTab] = useState("Receptionist");
   const [activeSubTab, setActiveSubTab] = useState("Patients Details");
   const [formData, setFormData] = useState({
     visitDate: "",
     fileNo: "",
-    patientName: "",
+    name: "",
     dob: "",
     age: "",
     sex: "Male",
@@ -166,9 +164,9 @@ export default function Shifa3() {
     nationality: "",
     corporateName: "",
     company: "",
+    doctorAssigned: "",
     remark: "",
   });
-
   // Update main tab and its default subtab together (avoid setState inside effect)
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -183,7 +181,6 @@ export default function Shifa3() {
       setActiveSubTab("Patients Details");
     }
   };
-
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -195,7 +192,6 @@ export default function Shifa3() {
       [name]: value,
     }));
   };
-
   const renderContent = () => {
     switch (activeSubTab) {
       case "Patients Details":
@@ -246,7 +242,6 @@ export default function Shifa3() {
         );
     }
   };
-
   return (
     <div className="w-full">
       <Tabs
@@ -256,7 +251,6 @@ export default function Shifa3() {
         setActiveTab={handleTabChange}
         setActiveSubTab={setActiveSubTab}
       />
-
       {/* Main Content */}
       <div className="space-y-8">{renderContent()}</div>
     </div>
