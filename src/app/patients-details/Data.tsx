@@ -100,7 +100,7 @@ export default function PatientDataTable() {
         params.append("date", selectedDate.format("YYYY-MM-DD"));
       }
 
-      const url = `http://localhost:7008/patients${
+      const url = `https://pak-alshifa-backend-production.up.railway.app/patients${
         params.toString() ? `?${params.toString()}` : ""
       }`;
 

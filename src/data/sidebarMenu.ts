@@ -7,7 +7,7 @@ export const sidebarMenu = [
     icon: "MdOutlineDashboard",
   },
   { name: "Patients Details", href: "/patients-details", icon: "FaFolderOpen" },
-  { name: "Patients List", href: "/patients-list", icon: "BsChatTextFill" },
+  // { name: "Patients List", href: "/patients-list", icon: "BsChatTextFill" },
 
   {
     name: "Help & Center",
