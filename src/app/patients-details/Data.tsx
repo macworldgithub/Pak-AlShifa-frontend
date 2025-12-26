@@ -100,7 +100,7 @@ export default function PatientDataTable() {
         params.append("date", selectedDate.format("YYYY-MM-DD"));
       }
 
-      const url = `https://pak-alshifa-backend-production.up.railway.app/patients${
+      const url = `https://www.shifa-backend.omnisuiteai.com/patients${
         params.toString() ? `?${params.toString()}` : ""
       }`;
 
