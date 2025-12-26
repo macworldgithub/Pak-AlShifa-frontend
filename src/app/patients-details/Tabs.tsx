@@ -22,7 +22,7 @@ export default function Tabs({
   }, []);
 
   const subTabsMap: { [key: string]: string[] } = {
-    Receptionist: ["Patients Details"],
+    Receptionist: ["Patients Details","Payment"],
     "Nursing Assessments": [
       "Nursing",
       "Complaint",
